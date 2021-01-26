@@ -22,7 +22,7 @@ Simple. Create a folder for your website project.<br>Run Hindsight in that folde
 
 > ### NOTE
 >
-> Hindsight is built using PHP. It is a PHAR binary.<br>So using **PHP CLI** is recommended, but you can also use a LAMP stack to run it.
+> Hindsight is a PHP app. It is a PHAR binary.<br>So using **PHP CLI** to run Hindsight is recommended, but you can also use a LAMP stack to run it.
 
 ## Author
 
@@ -32,5 +32,5 @@ See also the list of [contributions](https://libre.dorkodu.com) that we are maki
 
 ## License
 
-Seekr is open-sourced software licensed under the [MIT license](LICENSE).
+Hindsight is open-sourced software licensed under the [MIT license](LICENSE).
 
