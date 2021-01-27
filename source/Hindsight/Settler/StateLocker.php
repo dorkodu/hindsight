@@ -40,7 +40,7 @@
     private static function getLockFilePath($directoryPath)
     {
       if (FileStorage::isUsefulDirectory($directoryPath)) {
-        $lockFilePath = $directoryPath.'/Hindsight.lock';
+        $lockFilePath = $directoryPath.'/hindsight.lock';
         if (FileStorage::isUsefulFile($lockFilePath)) {
          return $lockFilePath;
         } else return FileStorage::createFile($lockFilePath) ? $lockFilePath : false;
