@@ -8,7 +8,7 @@
 
 
   $psr4Autoloader = new Psr4Autoloader();
-  $psr4Autoloader->usePharMethod("Hindsight.phar");
+  $psr4Autoloader->usePharMethod("hindsight.phar");
   $psr4Autoloader->register();
   
   # registering all namespaces used in Hindsight
