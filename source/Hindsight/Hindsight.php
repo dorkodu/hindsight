@@ -152,8 +152,8 @@
     public function status()
     {
       if ($this->isStateLocked()) {
-        self::consoleLog("Current state");
-      } else self::notice("There are untracked changes. Use 'compose' and generate from fresh contents.");
+        self::consoleLog("There are no changes.");
+      } else self::notice("There are untracked contents. Use 'compose' and generate a fresh new website !");
     }
 
     /**
