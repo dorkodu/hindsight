@@ -35,11 +35,13 @@
 				file_put_contents($this->path, JsonPreprocessor::encode($hash, $prettyPrint));
 				return;
 			}
+
 			$dir = dirname($this->path);
 			if (!is_dir($dir)) {
 				if (file_exists($dir)) return false; # it exists and not a directory
 				if (!@mkdir($dir, 0777, true)) return false; # it does not exists and could not be created
 			}
+			
 			$retries = 3;
 			while ($retries--) {
 				try {
