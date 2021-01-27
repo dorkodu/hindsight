@@ -28,7 +28,7 @@ Create a folder for your website project.<br>
 
 > ### NOTE
 >
-> Hindsight is a PHP app. It is actually a PHAR binary.<br>So using **PHP CLI** to run Hindsight is recommended, but you can also use a LAMP stack to run it.
+> Hindsight is a PHP app. It is actually a PHAR binary.<br>So you have to use **PHP CLI** to run Hindsight.
 
 Run Hindsight in that folder from terminal.
 
@@ -109,7 +109,7 @@ So, what to do? Well, simple.<br>Hindsight will generate a page for each of your
 
 - ### page.html
 
-  Your single template HTML file.<br>You put placeholders in this file. This is the pattern for placeholders : `{{ placeholder }}`<br>It can have any CSS or JS. Hindsight **DOES NOT** handle your assets.<br>You can put them into your **composed/** folder as how you wish.
+  Your single HTML template file.<br>You put placeholders in this file. This is the pattern for placeholders : `{{ placeholder }}`<br>It can have any CSS or JS. Hindsight **DOES NOT** handle your assets.<br>You can put them into your **composed/** folder as how you wish.
 
 
 
