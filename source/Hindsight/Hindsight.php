@@ -52,28 +52,26 @@
       }
     }
 
-    /** Prints the logo of Hindsight */
-    public function renderBrand()
-    {
-      TerminalUI::bold("Hindsight");
-      CLITinkerer::breakLine();
-    }
-
     /**
      * Simply greets users.
      */
     public function greet()
     {
-      $this->renderBrand();
-      TerminalUI::underDashedTitle("Hindsight - a Markdown based static website generator");
-      
-      $greetString = "
-  Hindsight is a Markdown based static website generator.
+      CLITinkerer::breakLine();
+      TerminalUI::dotTitle("Hindsight");
+      CLITinkerer::breakLine();
+      $greetString = 
+ "  Hindsight is a Markdown based static website generator.
   Hindsight makes creating, deploying and maintaining static websites easier.
   See 'https://libre.dorkodu.com/hindsight' for further knowledge and documentation.
-
+  
+  Usage :
+  > php hindsight <command>
+  
   Proudly brought you by Dorkodu.
   See how we change the future with Dorkodu @ 'https://dorkodu.com'
+
+
  
   Type 'help' to get a list of commands for Hindsight.
       ";
@@ -98,7 +96,7 @@
 
       CLITinkerer::writeLine($aboutString);
       TerminalUI::underDashedTitle("Creator");
-      TerminalUI::titledParagraph("Doruk Dorkodu", "Software Engineer, Founder & Chief @ Dorkodu".PHP_EOL."  See more 'https://doruk.dorkodu.com".PHP_EOL."  Email : doruk@dorkodu.com".PHP_EOL);
+      TerminalUI::titledParagraph("Doruk Dorkodu", "Software Engineer, Founder & Chief @ Dorkodu".PHP_EOL."  See more 'https://dorkodu.com/doruk".PHP_EOL."  Email : doruk@dorkodu.com".PHP_EOL);
     }
 
 
@@ -124,18 +122,18 @@
       CLITinkerer::writeLine("  When you're done, use 'compose' command.");
       CLITinkerer::writeLine("  Hindsight will 'compose' your content and generate a static website in 'composed/' folder.");
       CLITinkerer::writeLine("  That's it! Your site is ready to deploy.");
-      TerminalUI::definition("Note", "Don't forget to run 'compose' after each time you manipulate the contents.");
+      TerminalUI::definition("  Note", "Don't forget to run 'compose' after each time you manipulate the contents.");
       CLITinkerer::breakLine();
 
       # useable commands list
       TerminalUI::underDashedTitle("Possible Actions");
       CLITinkerer::writeLine("  List of available commands :");
       CLITinkerer::breakLine();
-      TerminalUI::dictionaryEntry("init", "Hindsight will prepare the project directory for its operations. create some files/directories for its needs.");
+      TerminalUI::dictionaryEntry("init", "Hindsight will prepare the project folder for its operations. Create an empty project template.");
       TerminalUI::dictionaryEntry("about", "You can learn more about Hindsight. It's recommended to read :)");
       TerminalUI::dictionaryEntry("compose", "Hindsight will 'compose' your contents and generate a static website in 'composed/' folder.");
-      TerminalUI::dictionaryEntry("status", "");
-      TerminalUI::dictionaryEntry("help", "The simple documentation on Hindsight, which is exteremely useful. You are reading it now :) But you don't need to worry about underlying logic. It is not magic, created by a 16 yo software engineer :D");
+      TerminalUI::dictionaryEntry("status", "Tells you if something is changed and website should be composed again.");
+      TerminalUI::dictionaryEntry("help", "The simple documentation on Hindsight, which is exteremely useful. You are reading it now :)");
       CLITinkerer::breakLine();
 
       # stuff related to Hindsight
@@ -159,7 +157,7 @@
 
     /**
      * Initialises the environment for Hindsight, in given directory.
-     **/
+     */
     public function init()
     {
       /**
@@ -170,32 +168,26 @@
        */
        if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
           if ($this->isInittedDirectory($this->projectDirectory)) {
-            self::consoleLog("Already initted directory.");
+            self::consoleLog("Already initted folder.");
             return true;
           } else {
             # dir is useful
-            # Hindsight.json production
-            $HindsightJsonPath = $this->projectDirectory."/Hindsight.json";
+            # hindsight.json production
+            $HindsightJsonPath = $this->projectDirectory."/hindsight.json";
             if (FileStorage::createFile($HindsightJsonPath)) {
 
               $HindsightJson = new JsonFile($HindsightJsonPath);
-              unset($HindsightJsonPath);
+
               $HindsightJsonTemplate = $this->generateHindsightJsonTemplate();
               $HindsightJson->write($HindsightJsonTemplate, true);
 
               if(StateLocker::lock($HindsightJson)) {
-                self::consoleLog("Hindsight successfully initialised the current directory.");
+                self::consoleLog("Successfully initialised the current directory.");
                 return true;
-              } else {
-                self::breakRunning("PROBLEM", "Couldn't lock the current state.");
-              }
-            } else {
-              self::breakRunning("PROBLEM", "Couldn't create Hindsight.json file.");
-            }
+              } else self::breakRunning("PROBLEM", "Couldn't lock the current state.");
+            } else self::breakRunning("PROBLEM", "Couldn't create Hindsight.json file.");
           }
-       } else {
-        self::breakRunning("PROBLEM", "Current directory is not useful. Check read/write permissions.");
-       }
+       } else self::breakRunning("PROBLEM", "Current directory is not useful. Check read/write permissions.");
     }
 
     /**
@@ -205,7 +197,7 @@
      */
     public function isInittedDirectory()
     {
-      if (FileStorage::isUsefulFile($this->projectDirectory."/Hindsight.json") && FileStorage::isUsefulFile($this->projectDirectory."/Hindsight.lock")) {
+      if (FileStorage::isUsefulFile($this->projectDirectory."/hindsight.json") && FileStorage::isUsefulFile($this->projectDirectory."/hindsight.lock")) {
         return true;
       } else {
         return false; # no Hindsight.json || Hindsight.lock file ?!
@@ -299,39 +291,6 @@
      **/
     private function generateHindsightJsonTemplate()
     {
-      /*    
-          {
-              "placeholders" : {
-
-              }
-
-              "assets" : {
-
-              }
-          }
-       */
       return array("placeholders" => array(), "assets" => array());
-    }
-
-    /**
-     * Creates a loot/ dir in project directory, then inits a Loot there.
-     *
-     * @return boolean true on success, false on failure
-     */
-    private function createLoot()
-    {
-      # loot/ directory
-      if (!FileStorage::isUsefulDirectory($this->projectDirectory)) {
-        if (!FileStorage::createDirectory($this->projectDirectory."/loot"))
-          return false;
-      }
-
-      # loot/Hindsight/ directory
-      if (!FileStorage::isUsefulDirectory($this->projectDirectory."/loot/Hindsight")) {
-        if (!FileStorage::createDirectory($this->projectDirectory."/loot/Hindsight"))
-          return false;
-      }
-
-      return true;
     }
 	}
