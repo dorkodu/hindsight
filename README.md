@@ -87,6 +87,8 @@ So, what to do? Well, simple.<br>Hindsight will generate a page for each of your
 
     You give your **[placeholder] + [contents]** as **"key": "value"** pairs.<br>These placeholders will be replaced by their contents in each of your pages.  
     
+    There is a single reserved placeholder, which is **"$contents"**.<br>This points to where your Markdown contents will be injected into.
+    
   - #### assets 
 
     This is an array of static files that you want to copy from **static/** folder to a path in **composed/** folder<br>You must give a **file name** and a path in **composed/** folder. 
