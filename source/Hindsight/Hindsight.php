@@ -1,10 +1,9 @@
 <?php
 	namespace Hindsight;
 
-  use Hindsight\Dependency\DependencyLocker;
-  use Hindsight\Dependency\DependencyResolver;
+  use Hindsight\Settler\StateLocker;
+  use Hindsight\Settler\SettingsResolver;
   use Hindsight\FileStorage;
-  use Hindsight\Utils\PrimitiveTest;
   use Hindsight\Utils\CLITinkerer;
   use Hindsight\Utils\TerminalUI;
   use Hindsight\Json\JsonFile;
@@ -42,7 +41,10 @@
           $this->init();
           break;
         case 'compose':
-          $this->weave();
+          $this->compose();
+          break;
+        case 'status':
+          $this->status();
           break;
         default:
           $this->greet();
@@ -56,6 +58,28 @@
       TerminalUI::bold("Hindsight");
       CLITinkerer::breakLine();
     }
+
+    /**
+     * Simply greets users.
+     */
+    public function greet()
+    {
+      $this->renderBrand();
+      TerminalUI::underDashedTitle("Hindsight - a Markdown based static website generator");
+      
+      $greetString = "
+  Hindsight is a Markdown based static website generator.
+  Hindsight makes creating, deploying and maintaining static websites easier.
+  See 'https://libre.dorkodu.com/hindsight' for further knowledge and documentation.
+
+  Proudly brought you by Dorkodu.
+  See how we change the future with Dorkodu @ 'https://dorkodu.com'
+ 
+  Type 'help' to get a list of commands for Hindsight.
+      ";
+
+      CLITinkerer::writeLine($greetString);
+    }
     
      /**
      * Writes some basic info about Hindsight
@@ -65,12 +89,11 @@
       $this->greet();
 
       $aboutString = "
-  Hindsight is created to make easier creating a documentation site in a simple & efficient way.
+  Hindsight is created to make easier publishing a static website in a simple & fast way.
 
-  You only declare your project's information in a JSON file.
-  Hindsight composes a static site from the markdown files you created. No magic, just simplicity :D
-  You upload the files to server. That's it!
-  Since it composes static site, contents can be used offline.
+  You only declare your website project's information in a JSON file.
+  Hindsight composes a static website from the markdown files you created. No magic, just simplicity :D
+  It's simply a Markdown-to-HTML composer with adding placeholders feature for templating.
       ";
 
       CLITinkerer::writeLine($aboutString);
@@ -78,26 +101,7 @@
       TerminalUI::titledParagraph("Doruk Dorkodu", "Software Engineer, Founder & Chief @ Dorkodu".PHP_EOL."  See more 'https://doruk.dorkodu.com".PHP_EOL."  Email : doruk@dorkodu.com".PHP_EOL);
     }
 
-    /**
-     * Simply greets users.
-     * */
-    public function greet()
-    {
-      $this->renderBrand();
-      TerminalUI::underDashedTitle("Hindsight - a Utility for Composing Documentations");
-      
-      $greetString = "
-  Hindsight helps you handle and automate the creation of a documentation website.
-  See 'https://opensource.dorkodu.com/hindsight' for further knowledge and documentation.
 
-  Proudly brought you by Dorkodu.
-  See how we change the future with Dorkodu @ 'https://dorkodu.com'
-  
-  Type 'help' to get a list of useful commands for Hindsight.
-      ";
-
-      CLITinkerer::writeLine($greetString);
-    }
 
     /**
      * Prints the help page (a simple monolith documentation text) for Hindsight.
@@ -111,38 +115,46 @@
       
       # how to use Hindsight ?
       TerminalUI::underDashedTitle("How to use Hindsight?");
-      CLITinkerer::writeLine("  Copy Hindsight's file to the directory you want to work in.");
-      CLITinkerer::writeLine("  Launch Hindsight in that directory");
-      CLITinkerer::writeLine("  For the first time in that directory, use 'init' command.");
-      CLITinkerer::writeLine("  It will set the environment, and create a sample documentation project in the directory.");
-      CLITinkerer::writeLine("  Then you give your project's details (metadata) with JSON format, in 'hindsight.json' file.");
-      CLITinkerer::writeLine("  You can create pages using Markdown, in 'contents/' directory.");
+      CLITinkerer::writeLine("  Copy Hindsight's binary to the folder you want to work in.");
+      CLITinkerer::writeLine("  Launch Hindsight from Terminal to be in that folder");
+      CLITinkerer::writeLine("  For the first time in that folder, use 'init' command.");
+      CLITinkerer::writeLine("  It will set the environment, and create a sample website project.");
+      CLITinkerer::writeLine("  Then you give your website data with JSON format, in 'hindsight.json' file.");
+      CLITinkerer::writeLine("  You can create pages using Markdown, in 'pages/' folder.");
       CLITinkerer::writeLine("  When you're done, use 'compose' command.");
-      CLITinkerer::writeLine("  Hindsight will 'compose' your documentation content and generate a static site in './composed' directory.");
+      CLITinkerer::writeLine("  Hindsight will 'compose' your content and generate a static website in 'composed/' folder.");
       CLITinkerer::writeLine("  That's it! Your site is ready to deploy.");
-      TerminalUI::definition("Note", "Don't forget to run 'compose' after when you manipulate your contents (Markdown files or hindsight.json).");
+      TerminalUI::definition("Note", "Don't forget to run 'compose' after each time you manipulate the contents.");
       CLITinkerer::breakLine();
 
       # useable commands list
       TerminalUI::underDashedTitle("Possible Actions");
       CLITinkerer::writeLine("  List of available commands :");
       CLITinkerer::breakLine();
-      TerminalUI::dictionaryEntry("install", "Installs Hindsight, so you can use directly typing 'Hindsight <command>' in terminal.");
       TerminalUI::dictionaryEntry("init", "Hindsight will prepare the project directory for its operations. create some files/directories for its needs.");
-      TerminalUI::dictionaryEntry("about", "You can learn more about Hindsight. It's recommended to read some stuff :D");
-      TerminalUI::dictionaryEntry("weave", "Hindsight interprets the Hindsight.json file and 'weaves' your dependencies to your app. It produces a Hindsight-weaver.php file that you require in your app, and forget about autoloading hell!");
+      TerminalUI::dictionaryEntry("about", "You can learn more about Hindsight. It's recommended to read :)");
+      TerminalUI::dictionaryEntry("compose", "Hindsight will 'compose' your contents and generate a static website in 'composed/' folder.");
+      TerminalUI::dictionaryEntry("status", "");
       TerminalUI::dictionaryEntry("help", "The simple documentation on Hindsight, which is exteremely useful. You are reading it now :) But you don't need to worry about underlying logic. It is not magic, created by a 16 yo software engineer :D");
       CLITinkerer::breakLine();
 
       # stuff related to Hindsight
-      TerminalUI::underDashedTitle("What Hindsight does in my directory?");
-      TerminalUI::dictionaryEntry("hindsight", "This is the Hindsights CLI util. Run it from the terminal, in the project directory.");
-      TerminalUI::dictionaryEntry("hindsight.json", "The file you define your project's metadata.");
+      TerminalUI::underDashedTitle("What Hindsight does in my folder?");
+      TerminalUI::dictionaryEntry("hindsight", "This is the Hindsight CLI util. Run it from the terminal, in the project folder.");
+      TerminalUI::dictionaryEntry("hindsight.json", "The file you give your website data.");
       TerminalUI::dictionaryEntry("hindsight.lock", "Hindsight will save its last run state in this file. For tracking changes.");
-      TerminalUI::dictionaryEntry("contents/ directory", "Contents of your site will be created there, after running 'compose'.");
-      TerminalUI::dictionaryEntry("static/ directory", "You can put your static");
-      TerminalUI::dictionaryEntry("composed/ directory", "You can put your dependent bundles (files/directories) in this directory. Hindsight uses 'loot/' for storing its app-related files. It can be used as a single repository of vendor-lock-in code.");
+      TerminalUI::dictionaryEntry("pages/ folder", "Contents of your site will be created there, after running 'compose'.");
+      TerminalUI::dictionaryEntry("assets/ folder", "You can put your assets, and then give directives in 'hindsight.json'");
+      TerminalUI::dictionaryEntry("composed/ folder", "Hindsight will put your composed website into this folder.");
       CLITinkerer::breakLine();
+    }
+
+    /**
+     * Outputs the status of website project
+     */
+    public function status()
+    {
+      self::consoleLog("Status.");
     }
 
     /**
@@ -153,8 +165,8 @@
       /**
        * if not already used by Hindsight, then :
        * -> CREATE :
-       *    - an empty template Hindsight.json
-       *    - generate that template's  hash and lock the state into Hindsight.lock
+       *    - an empty hindsight.json
+       *    - generate that template's hash and lock the state into hindsight.lock
        */
        if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
           if ($this->isInittedDirectory($this->projectDirectory)) {
@@ -171,7 +183,7 @@
               $HindsightJsonTemplate = $this->generateHindsightJsonTemplate();
               $HindsightJson->write($HindsightJsonTemplate, true);
 
-              if(DependencyLocker::lock($HindsightJson)) {
+              if(StateLocker::lock($HindsightJson)) {
                 self::consoleLog("Hindsight successfully initialised the current directory.");
                 return true;
               } else {
@@ -203,17 +215,20 @@
     /**
      * Weaves the dependencies in given directory.
      **/
-    public function weave()
+    public function compose()
     {
+      self::consoleLog("Compose!");
+
       /**
-       * read Hindsight.json and Hindsight.lock, compare states :
+       * read hindsight.json and hindsight.lock, compare states :
        * 
-       * --if state is changed
+       * - if state is changed
        *    -> create loot/ and fill it
        *    -> generate a fresh autoloading script, and lock the state.
-       * --else
+       * - else
        *    -> dont touch it :P
        */
+      /*
       if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
         self::consoleLog("Directory is useful. Hindsight is running.");
         
@@ -258,24 +273,14 @@
           } else $this->breakRunning("PROBLEM", "'Hindsight.json' is not useful. Check read/write permissions or if it exists.");
         } else $this->breakRunning("PROBLEM", "Current directory is not initted. Please run 'init' before.");  
       } else self::breakRunning("PROBLEM", "Current directory is not useful. Check for read/write permissions.");
-    }
-
-    /**
-     * Weaves the dependencies in given directory.
-     **/
-    public function install()
-    {
-      /**
-       * read Hindsight.json and Hindsight.lock, compare states : 
-       * if state is changed generate a fresh autoloading script, and lock the state.
-       * else dont touch it :P
-       */
-      self::breakRunning("NOTICE", "This feature is out of order.");
+    */
     }
 
     private static function consoleLog($text)
     {
-      CLITinkerer::writeLine("> ".$text);
+      TerminalUI::bold("Hindsight");
+      CLITinkerer::write(" > ". $text);
+      CLITinkerer::breakLine();
     }
 
     private static function breakRunning($topic, $content)
@@ -294,54 +299,18 @@
      **/
     private function generateHindsightJsonTemplate()
     {
-
       /*    
           {
-              "baseUrl": "Base URL of the site",
-              "name": "Name of the project",
-              "description": "Description of the project",
-              "tagline": "Shortest descriptive statement about the project",
-              "status": "Status property of the project (active|abandoned, version etc.)",
-              "copyright": "A simple copyright statement for your project.",
-              "favicon": "HTML Favicon path",
-              "headerImage": "Logo, icon or brand image path for the project to put on header.",
-              "headerLinks": [
-                  {
-                      "title": "Title of the link",
-                      "url": "Absolute URL of the link"
-                  },
-                  {
-                      "title": "Title of the link",
-                      "url": "Absolute URL of the link"
-                  }
-              ],
-              "footerLinks": {
-                  "Footer Section 1": [
-                      {
-                          "title": "Title of the link",
-                          "url": "Absolute URL of the link"
-                      },
-                      {
-                          "title": "Title of the link",
-                          "url": "Absolute URL of the link"
-                      }
-                  ],
-                  "Footer Section 2": [
-                      {
-                          "title": "Title of the link",
-                          "url": "Absolute URL of the link"
-                      },
-                      {
-                          "title": "Title of the link",
-                          "url": "Absolute URL of the link"
-                      }
-                  ]
+              "placeholders" : {
+
+              }
+
+              "assets" : {
+
               }
           }
        */
-      $classmap = array();
-      $namespaces = array();
-      return array("knotted" => array("classmap" => $classmap, "namespaces" => $namespaces));
+      return array("placeholders" => array(), "assets" => array());
     }
 
     /**

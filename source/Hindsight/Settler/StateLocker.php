@@ -1,12 +1,12 @@
 <?php
-  namespace Hindsight\Dependency;
+  namespace Hindsight\Settler;
 
   use Hindsight\FileStorage;
   use Hindsight\Json\JsonFile;
   use Hindsight\Json\JsonPreprocessor;
   use Hindsight\Utils\Dorcrypt;
 
-  class DependencyLocker
+  class StateLocker
   {
     /**
      * Tells whether the current state is locked to a known state

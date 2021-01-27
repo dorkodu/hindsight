@@ -3,9 +3,8 @@
 
   use Hindsight\Json\JsonFile;
   use Hindsight\Json\JsonPreprocessor;
-  use Hindsight\FileStorage;
 
-  class DependencyResolver
+  class SettingsResolver
   {
     /**
      * Returns the knotted array for a given package

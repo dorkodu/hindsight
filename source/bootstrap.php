@@ -20,5 +20,5 @@
 
 
   # application logic :D
-  $Hindsight = new Hindsight(realpath("."));
-  $Hindsight->run();
+  $hindsight = new Hindsight(realpath("."));
+  $hindsight->run();

@@ -11,7 +11,7 @@
       spl_autoload_register(array($this, 'loadClass'));
     }
 
-    public  function usePharMethod($pharName) {
+    public function usePharMethod($pharName) {
       if (is_string($pharName)) {
         $this->pharName = $pharName;
         return true;
