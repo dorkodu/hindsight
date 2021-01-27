@@ -1,7 +1,4 @@
 <?php
-
-  use CLITinkerer;
-  
   class TerminalUI
   {
     public static function bold($message)

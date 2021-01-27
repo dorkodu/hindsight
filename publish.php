@@ -1,6 +1,6 @@
 <?php
   error_reporting(E_ALL);
 
-  require "HindsightPublisher.php";
+  require "publisher/HindsightPublisher.php";
 
   HindsightPublisher::publish("./source", ".");
