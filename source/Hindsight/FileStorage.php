@@ -36,7 +36,7 @@
 						return true;
 					else return false; # could not make the dir
 				}
-			} else return false; # project directory is empty
+			} else return false;
 		}
 		
     /**
