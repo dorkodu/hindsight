@@ -1,5 +1,5 @@
 <?php
-	namespace Hindsight;
+  namespace Hindsight;
 
   use Hindsight\Settler\StateLocker;
   use Hindsight\Settler\SettingsResolver;
@@ -20,11 +20,10 @@
       $this->projectDirectory = realpath($projectDirectory);
     }
     
-		
-		/**
+    /**
      * Hindsight's igniter :D
-		 */
-		public function run() {
+     */
+    public function run() {
       /**
        * checks for updates
        * checks if config is OK
@@ -103,7 +102,7 @@
 
     /**
      * Prints the help page (a simple monolith documentation text) for Hindsight.
-     **/
+     */
     public function help()
     {
       $this->greet();
@@ -152,7 +151,9 @@
      */
     public function status()
     {
-      self::consoleLog("Status.");
+      if ($this->isStateLocked()) {
+        self::consoleLog("Current state");
+      } else self::notice("There are untracked changes. Use 'compose' and generate from fresh contents.");
     }
 
     /**
@@ -171,7 +172,7 @@
             self::consoleLog("Already initted folder.");
             return true;
           } else {
-            # dir is useful
+            # folder is useful
             # hindsight.json production
             $HindsightJsonPath = $this->projectDirectory."/hindsight.json";
             if (FileStorage::createFile($HindsightJsonPath)) {
@@ -187,7 +188,7 @@
               } else self::breakRunning("PROBLEM", "Couldn't lock the current state.");
             } else self::breakRunning("PROBLEM", "Couldn't create Hindsight.json file.");
           }
-       } else self::breakRunning("PROBLEM", "Current directory is not useful. Check read/write permissions.");
+       } else self::problem("Current folder is not useful. Check read/write permissions.");
     }
 
     /**
@@ -200,13 +201,52 @@
       if (FileStorage::isUsefulFile($this->projectDirectory."/hindsight.json") && FileStorage::isUsefulFile($this->projectDirectory."/hindsight.lock")) {
         return true;
       } else {
-        return false; # no Hindsight.json || Hindsight.lock file ?!
+        return false; # no hindsight.json || hindsight.lock file ?!
       }
     }
 
     /**
-     * Weaves the dependencies in given directory.
-     **/
+     * Tells if the current state is locked
+     *
+     * @return boolean
+     */
+    private function isStateLocked()
+    {
+      if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
+        # Folder is useful. Hindsight is running.
+        if ($this->isInittedDirectory()) {
+          # Current folder is OK. Looking for project
+          $HindsightJson = new JsonFile($this->projectDirectory."/hindsight.json");
+          
+          if ($HindsightJson->isUseful()) {
+            # check if current state locked
+            $isStateLocked = StateLocker::isCurrentStateLocked($HindsightJson);
+            # check if all files are tracked
+            $areAllFilesAreTracked = true; # change this
+            
+            return ($isStateLocked && $areAllFilesAreTracked);
+            # } else self::notice("There are untracked changes. Use 'compose' and generate from fresh contents.");
+
+          } else self::problem("'hindsight.json' is not useful. Check read/write permissions or if it exists.");
+        } else self::problem("Folder is not initted. Please run 'init' before to create a new Hindsight project.");
+      } else self::problem("Folder is not useful. Check for read/write permissions.");
+   /*  
+        } else $this->breakRunning("PROBLEM", "Couldn't lock the state.");
+
+        } else $this->breakRunning("PROBLEM", "Couldn't generate or save the new weaver script.");
+
+      } else $this->breakRunning("PROBLEM", "Coulnd't create or init Loot (loot/ directory). Check your read/write permissions.");
+      } else $this->breakRunning("PROBLEM", "Couldn't resolve dependencies. Reason may be your hindsight.json file."); 
+      }
+      } else $this->breakRunning("PROBLEM", "'Hindsight.json' is not useful. Check read/write permissions or if it exists.");
+      } else $this->breakRunning("PROBLEM", "Current directory is not initted. Please run 'init' before.");  
+      } else self::breakRunning("PROBLEM", "Current directory is not useful. Check for read/write permissions.");
+  */
+    }
+
+    /**
+     * Weaves the dependencies in given folder.
+     */
     public function compose()
     {
       self::consoleLog("Compose!");
@@ -222,18 +262,18 @@
        */
       /*
       if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
-        self::consoleLog("Directory is useful. Hindsight is running.");
+        self::consoleLog("Folder is useful. Hindsight is running.");
         
         if ($this->isInittedDirectory()) {
           
-          self::consoleLog("Current directory is OK. Looking for dependency declarations.");
-          $HindsightJson = new JsonFile($this->projectDirectory."/Hindsight.json");
+          self::consoleLog("Current folder is OK. Looking for project.");
+          $HindsightJson = new JsonFile($this->projectDirectory."/hindsight.json");
           
           if ($HindsightJson->isUseful()) {
             
             $isStateLocked = DependencyLocker::isCurrentStateLocked($HindsightJson);
             if ($isStateLocked) {
-              $this->breakRunning("NOTICE", "Hindsight has already weaved this dependencies. Current state is locked.");
+              $this->breakRunning("NOTICE", "Already composed the contents. Current state is locked.");
             } else {
               
               $rootDependenciesArray = DependencyResolver::resolve($HindsightJson);
@@ -260,12 +300,12 @@
                   } else $this->breakRunning("PROBLEM", "Couldn't generate or save the new weaver script.");
                
                 } else $this->breakRunning("PROBLEM", "Coulnd't create or init Loot (loot/ directory). Check your read/write permissions.");
-              } else $this->breakRunning("PROBLEM", "Couldn't resolve dependencies. Reason may be your Hindsight.json file."); 
+              } else $this->breakRunning("PROBLEM", "Couldn't resolve dependencies. Reason may be your hindsight.json file."); 
             }
           } else $this->breakRunning("PROBLEM", "'Hindsight.json' is not useful. Check read/write permissions or if it exists.");
         } else $this->breakRunning("PROBLEM", "Current directory is not initted. Please run 'init' before.");  
       } else self::breakRunning("PROBLEM", "Current directory is not useful. Check for read/write permissions.");
-    */
+      */
     }
 
     private static function consoleLog($text)
@@ -284,6 +324,16 @@
       exit;
     }
 
+    private static function notice($message)
+    {
+      self::breakRunning("NOTICE", $message);
+    }
+    
+    private static function problem($message)
+    {
+      self::breakRunning("PROBLEM", $message);
+    }
+    
     /**
      * Generates an empty, template string for hindsight.json
      * 
@@ -293,4 +343,4 @@
     {
       return array("placeholders" => array(), "assets" => array());
     }
-	}
+  }
