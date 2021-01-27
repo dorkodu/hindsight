@@ -20,12 +20,6 @@
       $this->defaultStubFileName = 'index.php';
       $this->compressMethod = "NONE";
       $this->workVirtually = false;
-
-      $this->setAfterEffect(
-        function () {
-          self::consoleLog($this->name." has been successfully published to : ".$this->publishRoot);
-        }
-      );
     }
 
     # user function caller method :P

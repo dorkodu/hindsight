@@ -18,6 +18,10 @@
     public function __construct(string $projectDirectory)
     {
       $this->projectDirectory = realpath($projectDirectory);
+
+      set_exception_handler(function($exception) {
+        Hindsight::problem($exception->getMessage());
+      });
     }
     
     /**
@@ -172,26 +176,7 @@
           self::consoleLog("Already initted folder.");
           return true;
         } else {
-          # folder is useful
-          # hindsight.json production
-          $HindsightJsonPath = $this->projectDirectory."/hindsight.json";
-
-          if (FileStorage::createFile($HindsightJsonPath)) {
-            $HindsightJson = new JsonFile($HindsightJsonPath);
-
-            $HindsightJsonTemplate = $this->generateHindsightJsonTemplate();
-            $HindsightJson->write($HindsightJsonTemplate, true);
-
-            if (FileStorage::createDirectory($this->projectDirectory."/pages")) {
-              if(FileStorage::createDirectory($this->projectDirectory."/composed")) {
-                if (FileStorage::createDirectory($this->projectDirectory."/assets")) {
-                  
-                } else self::problem("Couldn't create 'assets' folder.");
-              } else self::problem("Couldn't create 'composed' folder.");
-            } else self::problem("Couldn't create 'pages' folder.");
-            # self::problem("Couldn't lock the current state.");
-
-          } else self::problem("Couldn't create hindsight.json file.");
+          # create a SampleProject
         }
       } else self::problem("Current folder is not useful. Check read/write permissions.");
     }
@@ -326,15 +311,5 @@
     private static function problem($message)
     {
       self::breakRunning("PROBLEM", $message);
-    }
-    
-    /**
-     * Generates an empty, template string for hindsight.json
-     * 
-     * @return array the template string content of a hindsight.json file
-     **/
-    private function generateHindsightJsonTemplate()
-    {
-      return array("placeholders" => array(), "assets" => array());
     }
   }
