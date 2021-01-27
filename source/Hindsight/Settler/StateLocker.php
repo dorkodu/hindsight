@@ -90,7 +90,7 @@
 
     /**
      * Locks the dependency to the current state
-     * @param JsonFile $jsonFile the Hindsight.json of the project
+     * @param JsonFile $jsonFile the hindsight.json of the project
      * @return false on failure
      * @return true on success
      */
