@@ -36,14 +36,14 @@
       return $output;
     }
 
-    private static function consoleLog($text)
+    public  static function consoleLog($text)
     {
       TerminalUI::bold("Hindsight Publisher");
       CLITinkerer::write(" > ". $text);
       CLITinkerer::breakLine();
     }
 
-    private static function breakRunning($topic, $content)
+    public static function breakRunning($topic, $content)
     {
       TerminalUI::bold("Hindsight Publisher > ");
       TerminalUI::bold($topic);
