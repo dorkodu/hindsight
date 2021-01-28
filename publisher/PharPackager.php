@@ -1,5 +1,5 @@
 <?php
-  class PharPublisher
+  class PharPackager
   {
     protected $sourceRoot;            # source root directory
     protected $publishRoot;           # publish root directory
@@ -28,12 +28,6 @@
       if (!empty($effect) && is_callable($effect)) {
         call_user_func_array($effect, []);
       }
-    }
-    
-    # a simple method to echo something to CLI
-    private static function consoleLog($message)
-    {
-      echo PHP_EOL."> ".$message.PHP_EOL;
     }
 
     # sets a value to whether to use buffering
@@ -118,8 +112,6 @@
 
         self::runEffect($this->afterEffect);
 
-      } else {
-        self::consoleLog("FAILURE : PHAR is readonly. You must set 'phar.readonly=0' in your php.ini file.");
-      }
+      } else throw new Exception("FAILURE : PHAR is readonly. You must set 'phar.readonly=0' in your php.ini file.");
     }
   }
