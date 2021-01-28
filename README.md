@@ -52,7 +52,7 @@ Run Hindsight in that folder from terminal.
   		|-- index.md
   		|-- <page-name>.md
   		···
-  |-- static/
+  |-- assets/
   		|-- <your-style>.css
   		···
   		|-- <your-script>.js
@@ -107,13 +107,13 @@ So, what to do? Well, simple.<br>Hindsight will generate a page for each of your
 
 - ### hindsight.lock
 
-  Hindsight locks the current state of the website, into this file.<br>This is used for understanding if something is changed.
+  Hindsight locks the current state of the website, into this file.<br>This is used for tracking changes in your contents.
 
 - ### page.html
 
-  Your single HTML template file.<br>You put placeholders in this file. This is the pattern for placeholders : `{{ placeholder }}`<br>It can have any CSS or JS. Hindsight **DOES NOT** handle your assets.<br>You can put them into your **composed/** folder as how you wish.
-
-
+  Your single HTML template file.<br>You put placeholders in this file. This is the pattern for placeholders : `{{ placeholder }}`<br>If you set "placeholder" to a string in hindsight.json, Hindsight will replace the placeholder with its value.
+  
+  It can have any CSS or JS. Hindsight **DOES NOT** handle your assets.<br>You can put them into your **composed/** folder as how you wish.<br>Or use "assets" in hindsight.json to give "copy to" directives.
 
 ## Author
 
