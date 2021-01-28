@@ -173,8 +173,7 @@
        */
        if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
         if ($this->isInittedDirectory($this->projectDirectory)) {
-          self::consoleLog("Already initted folder.");
-          return true;
+          self::notice("Already initted folder.");
         } else {
           # create a SampleProject
         }
