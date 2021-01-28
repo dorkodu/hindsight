@@ -2,11 +2,16 @@
   require "TerminalUI.php";
   require "CLITinkerer.php";
   require "PharPublisher.php";
+  require "Timer.php";
+  require "PerformanceProfiler.php";
 
   class HindsightPublisher
   {
     public static function publish(string $sourcePath, string $publishPath)
     {
+      $profiler = new PerformanceProfiler(6, 2);
+      $profiler->start();
+
       self::consoleLog("This will build, run tests and publish Hindsight project.");
 
       $hindsightPhar = new PharPublisher('hindsight.phar', $sourcePath, $publishPath);
@@ -25,6 +30,16 @@
 
       self::consoleLog("Output :");
       printf("%s\n", $resultOutput);
+
+      $profiler->stop();
+
+      echo "\n";
+      self::consoleLog( 
+        sprintf("It took %.3f seconds ~ %s to publish Hindsight."
+        ,$profiler->passedTime() 
+        ,$profiler->memoryPeakUsage()
+        )
+      );
     }
 
     public static function runTests() 
