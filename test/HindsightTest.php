@@ -95,7 +95,7 @@
     public function seeTestResults()
     {
       foreach ($this->outputs as $command => $output) {
-        self::consoleLog($command . " Output : \n" . $output);
+        self::consoleLog($command . " : \n" . $output . "\n");
       }
     }
     

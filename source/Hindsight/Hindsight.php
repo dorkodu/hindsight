@@ -88,10 +88,11 @@
       $this->greet();
 
       $aboutString = "
-  Hindsight is created to make easier publishing a static website in a simple & fast way.
+  Hindsight is created to make publishing a static website easier in a simple & fast way.
 
-  You only declare your website project's information in a JSON file.
-  Hindsight composes a static website from the markdown files you created. No magic, just simplicity :D
+  You only give your website data in a JSON file.
+  Create your pages as Markdown files.
+  Hindsight composes a static website from the Markdown files you created. No magic, very simple :D
   It's simply a Markdown-to-HTML composer with adding placeholders feature for templating.
       ";
 
@@ -140,7 +141,7 @@
       TerminalUI::dictionaryEntry("hindsight", "This is the Hindsight CLI util. Run it from the terminal, in the project folder.");
       TerminalUI::dictionaryEntry("hindsight.json", "The file you give your website data.");
       TerminalUI::dictionaryEntry("hindsight.lock", "Hindsight will save its last run state in this file. For tracking changes.");
-      TerminalUI::dictionaryEntry("pages/ folder", "Contents of your site will be created there, after running 'compose'.");
+      TerminalUI::dictionaryEntry("pages/ folder", "You will give your web pages as Markdown files here.");
       TerminalUI::dictionaryEntry("assets/ folder", "You can put your assets, and then give directives in 'hindsight.json'");
       TerminalUI::dictionaryEntry("composed/ folder", "Hindsight will put your composed website into this folder.");
       CLITinkerer::breakLine();
@@ -176,13 +177,31 @@
           self::notice("Already initted folder.");
         } else {
           # create a SampleProject
+          self::notice("Hindsight will create a sample project here.");
         }
       } else self::problem("Current folder is not useful. Check read/write permissions.");
     }
 
-    private function lockState(JsonFile $HindsightJson)
+    /**
+     * Undocumented function
+     *
+     * @param JsonFile $jsonFile
+     * @return void
+     */
+    private function lockState(JsonFile $jsonFile, array $markdownFileList)
     {
-      return StateLocker::lock($HindsightJson);
+      $jsonContent = $jsonFile->read();
+      if ($jsonContent !== false) {
+        $directoryPath = FileStorage::getDirectoryPath($jsonFile->getPath());
+        $lockFilePath = self::getLockFilePath($directoryPath);
+        if ($lockFilePath !== false) {
+          $currentState = self::generateLockHash($jsonContent);
+          return self::pushLockState($currentState, $lockFilePath);
+        } else return false;
+      } else return false;
+
+      $contents = "";
+      return StateLocker::lock($contents, $this->projectDirectory);
     }
 
     /**
@@ -192,7 +211,24 @@
      */
     public function isInittedDirectory()
     {
-      return (FileStorage::isUsefulFile($this->projectDirectory."/hindsight.json") && FileStorage::isUsefulFile($this->projectDirectory."/hindsight.lock"));
+      return ( 
+        FileStorage::isUsefulFile($this->projectDirectory."/hindsight.json")
+        && FileStorage::isUsefulFile($this->projectDirectory."/hindsight.lock")
+      );
+    }
+
+    /**
+     * Checks if the directory is already processed by Hindsight
+     *
+     * @return boolean
+     */
+    public function isCompleteProject()
+    {
+      return (
+        $this->isInittedDirectory() # is initted a project
+        && FileStorage::isUsefulDirectory($this->projectDirectory."/assets/") # does have "assets" folder?
+        && FileStorage::isUsefulDirectory($this->projectDirectory."/pages/") # does have "pages" folder
+      );
     }
 
     /**
@@ -227,8 +263,6 @@
      */
     public function compose()
     {
-      self::consoleLog("Compose!");
-
       /**
        * read hindsight.json and hindsight.lock, compare states :
        * 
@@ -236,19 +270,17 @@
        *    -> create loot/ and fill it
        *    -> generate a fresh autoloading script, and lock the state.
        * - else
-       *    -> dont touch it :P
+       *    -> dont touch it :D
        */
-      /*
       if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
-        self::consoleLog("Folder is useful. Hindsight is running.");
+        # Folder is useful. Hindsight is running.
         
         if ($this->isInittedDirectory()) {
-          
           self::consoleLog("Current folder is OK. Looking for project.");
           $HindsightJson = new JsonFile($this->projectDirectory."/hindsight.json");
           
           if ($HindsightJson->isUseful()) {
-            
+            /* 
             $isStateLocked = DependencyLocker::isCurrentStateLocked($HindsightJson);
             if ($isStateLocked) {
               $this->breakRunning("NOTICE", "Already composed the contents. Current state is locked.");
@@ -279,11 +311,10 @@
                
                 } else $this->breakRunning("PROBLEM", "Coulnd't create or init Loot (loot/ directory). Check your read/write permissions.");
               } else $this->breakRunning("PROBLEM", "Couldn't resolve dependencies. Reason may be your hindsight.json file."); 
-            }
-          } else $this->breakRunning("PROBLEM", "'Hindsight.json' is not useful. Check read/write permissions or if it exists.");
-        } else $this->breakRunning("PROBLEM", "Current directory is not initted. Please run 'init' before.");  
-      } else self::breakRunning("PROBLEM", "Current directory is not useful. Check for read/write permissions.");
-      */
+            }*/
+          } else $this->problem("'Hindsight.json' is not useful. Check read/write permissions or if it exists.");
+        } else $this->problem("Current directory is not initted. Please run 'init' before.");  
+      } else self::problem("Current folder is not useful. Check for read/write permissions.");
     }
 
     private static function consoleLog($text)

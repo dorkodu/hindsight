@@ -27,7 +27,7 @@
         $resultOutput = self::runTests();
 
         self::consoleLog("Test Results :");
-        printf("%s\n", $resultOutput);
+        printf("%s\n\n", $resultOutput);
     
         self::consoleLog("All tests have been run.");
         self::consoleLog("DONE.");
@@ -57,7 +57,7 @@
       $result = null;
       exec("php test/test.php", $output, $result);
 
-      return implode("\n", $output);
+      return implode(PHP_EOL, $output);
     }
 
     public static function consoleLog($text)

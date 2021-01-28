@@ -43,7 +43,9 @@
         $lockFilePath = $directoryPath.'/hindsight.lock';
         if (FileStorage::isUsefulFile($lockFilePath)) {
          return $lockFilePath;
-        } else return FileStorage::createFile($lockFilePath) ? $lockFilePath : false;
+        } else return FileStorage::createFile($lockFilePath) 
+                      ? $lockFilePath 
+                      : false;
       } else return false;
     }
 
@@ -94,16 +96,12 @@
      * @return false on failure
      * @return true on success
      */
-    public static function lock(JsonFile $jsonFile)
+    public static function lock(string $contents, string $directory)
     {
-      $jsonContent = $jsonFile->read();
-      if ($jsonContent !== false) {
-        $directoryPath = FileStorage::getDirectoryPath($jsonFile->getPath());
-        $lockFilePath = self::getLockFilePath($directoryPath);
-        if ($lockFilePath !== false) {
-          $currentState = self::generateLockHash($jsonContent);
-          return self::pushLockState($currentState, $lockFilePath);
-        } else return false;
+      $lockFilePath = self::getLockFilePath($directory);
+      if ($lockFilePath !== false) {
+        $currentState = self::generateLockHash($jsonContent);
+        return self::pushLockState($currentState, $lockFilePath);
       } else return false;
     }
   }
