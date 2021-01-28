@@ -1,16 +1,17 @@
 <?php
-  error_reporting(E_ALL);
+  error_reporting(E_ERROR);
 
   require "publisher/HindsightPublisher.php";
   
-  set_error_handler(function($e) {
+  # error handler
+  set_error_handler( function($e) {
     HindsightPublisher::breakRunning("ERROR", $e->__toString());
-  });
+  } );
 
-  set_exception_handler(function($e) {
+  # exception handler
+  set_exception_handler( function($e) {
     HindsightPublisher::breakRunning("EXCEPTION", $e->__toString());
-  });
+  } );
 
-
-
+  # publish Hindsight
   HindsightPublisher::publish("./source", ".");

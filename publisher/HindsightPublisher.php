@@ -3,56 +3,64 @@
   require "CLITinkerer.php";
   require "PharPackager.php";
   require "Timer.php";
-  require "PerformanceProfiler.php";
 
   class HindsightPublisher
   {
-    public static function publish(string $sourcePath, string $publishPath)
+    public const PKG_NAME = "hindsight";
+    
+    public static function publish(string $sourceFolder, string $publishFolder)
     {
-      $profiler = new PerformanceProfiler(6, 2);
-      $profiler->start();
-
       self::consoleLog("This will build, run tests and publish Hindsight project.");
+      self::removePreviousPackageIfExists($publishFolder);
 
-      $hindsightPhar = new PharPackager('hindsight.phar', $sourcePath, $publishPath);
+      $hindsightPhar = new PharPackager('hindsight.phar', $sourceFolder, $publishFolder);
       $hindsightPhar->setDefaultStub("bootstrap.php");
-      $hindsightPhar->setAfterEffect(function() {
-        self::consoleLog("Build and published Hindsight successfully.");
-      });
-
       $hindsightPhar->publish();
 
-      $name = "hindsight";
-      $successRename = rename("hindsight.phar", $name);
+      $successPublished = is_file("hindsight.phar");
+      $successRename = rename("hindsight.phar", self::PKG_NAME);
       $successCopy = copy("hindsight", "sample/hindsight");
+      
+      if ($successCopy && $successPublished && $successRename) {
+        self::consoleLog("Successfully published the Hindsight.");
 
-      $resultArray = self::runTests();
-      $resultOutput = implode("\n", $resultArray);
+        $resultOutput = self::runTests();
 
-      self::consoleLog("Output :");
-      printf("%s\n", $resultOutput);
-
-      $profiler->stop();
-
-      echo "\n";
-      self::consoleLog( 
-        sprintf("It took %.3f seconds ~ %s to publish Hindsight."
-        ,$profiler->passedTime() 
-        ,$profiler->memoryPeakUsage()
-        )
-      );
+        self::consoleLog("Test Results :");
+        printf("%s\n", $resultOutput);
+    
+        self::consoleLog("All tests have been run.");
+        self::consoleLog("DONE.");
+      } else throw new Exception("An unknown problem occured on publishing Hindsight.");
     }
 
+    public static function packageAlreadyExists($directory)
+    {
+      return is_file(realpath($directory)."hindsight");
+    }
+
+    public static function removePreviousPackageIfExists($directory)
+    {
+      if(self::packageAlreadyExists($directory)) {
+        return unlink(realpath($directory)."/hindsight");
+      }
+    }
+
+    /**
+     * Runs all Hindsight tests and returns the output
+     *
+     * @return string
+     */
     public static function runTests() 
     {
       $output = array();
       $result = null;
       exec("php test/test.php", $output, $result);
 
-      return $output;
+      return implode("\n", $output);
     }
 
-    public  static function consoleLog($text)
+    public static function consoleLog($text)
     {
       TerminalUI::bold("Hindsight Publisher");
       CLITinkerer::write(" > ". $text);
