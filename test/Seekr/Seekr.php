@@ -2,7 +2,7 @@
   namespace Seekr;
 
   use Seekr\TestResult;
-  use Seekr\Timer;
+  use Seekr\PerformanceProfiler;
 
   /**
    *  A simple test library developed for writing better tests on PHP ecosystem
@@ -30,7 +30,7 @@
      * HOOKS
      * -------------------------
      * Seekr provides some lifecycle hooks that you can use to catch up with specific moments, 
-     * perform actions that you may want then
+     * then perform actions that you may want/need
      */
     
     /**
@@ -38,28 +38,28 @@
      *
      * @return void
      */
-    public function setUp() {}
+    public function setUp() { }
 
     /**
      * This hook is called after all tests in this test class have run
      *
      * @return void
      */
-    public function finish() {}
+    public function finish() { }
 
     /**
      * This hook is called before each test of this test class is run
      *
      * @return void
      */
-    public function mountedTest() {}
+    public function mountedTest() { }
 
     /**
      * This hook is called after each test of this test class is run
      *
      * @return void
      */
-    public function unmountedTest() {}
+    public function unmountedTest() { }
 
     /** LOGIC */
 
@@ -108,11 +108,12 @@
       }
 
       # returns the error log
-      return sprintf( "%s.%s() was a %s ~ in %.9f seconds %s"
+      return sprintf( "%s.%s() was a %s ~ in %.6f seconds ~ at peak %s %s"
         ,$this->testClassName
         ,$result->getName()
         ,$result->isSuccess() ? 'SUCCESS' : 'FAILURE'
-        ,$result->getExecutionTime() # formats test execution time into a string
+        ,$result->getExecutionTime() # get test execution time
+        ,$result->getPeakMemoryUsage() # get test peak memory usage
         ,$exceptionOutput
         );
     }
@@ -123,7 +124,8 @@
      * @param string $contents
      * @return void
      */
-    public function consoleLog(string $contents) {
+    public function consoleLog(string $contents) 
+    {
       printf("\n\033[1mSeekr >\033[0m %s", $contents);
     }
 
@@ -144,8 +146,12 @@
      */
     public final function runTests()
     {
-      # test execution timer
-      $timer = new Timer(true);
+      /**
+       * performance profiling (time & memory) for test executions
+       * Precisions :
+       * 1/100.000 for time -- 1/100 for memory
+       */ 
+      $profiler = new PerformanceProfiler(6, 2);
 
       # create a reflection class
       $reflectionClass = new \ReflectionClass( $this );
@@ -162,7 +168,7 @@
         $methodname = $method->getName();
         
         if ( strlen( $methodname ) > 4 && substr( $methodname, 0, 4 ) == 'test' ) {
-          # condition above means this is a test method, so mount it!
+          # condition above means this is a test method, if so mounts it !
           # RUN_HOOK mountedTest()
           $this->mountedTest();
           
@@ -170,7 +176,7 @@
 
           # started output buffering
           try {
-            $timer->start(); # start timer
+            $profiler->start(); # start profiler
             $this->$methodname(); # run test method
             $result = TestResult::createSuccess( $this, $method );
             ++$this->_successCount;
@@ -179,8 +185,10 @@
             ++$this->_failureCount;
           }
           
-          $timer->stop(); # stop timer and set execution time
-          $result->setExecutionTime( $timer->passedTime() );
+          # stop profiler and get results
+          $profiler->stop(); 
+          $result->setExecutionTime( $profiler->passedTime() );
+          $result->setPeakMemoryUsage( $profiler->memoryPeakUsage() );
 
           $output = ob_get_clean();
           $result->setOutput( $output );
@@ -221,6 +229,5 @@
           ,$this->_failureCount
         ) 
       );
-
     }
   }
