@@ -1,13 +1,7 @@
 <?php
-  error_reporting(0);
-  
-  require __DIR__ . '/Seekr/Seekr.php';
-  require __DIR__ . '/Seekr/Contradiction.php';
-  require __DIR__ . '/Seekr/TestResult.php';
-  require __DIR__ . '/Seekr/Timer.php';
-  require __DIR__ . '/Seekr/Premise.php';
-  require __DIR__ . '/Seekr/Say.php';
+  error_reporting(E_ALL);
 
+  require __DIR__ . '/Seekr/seekr_autoloader.php';
   require __DIR__ . '/HindsightTest.php';
 
   // this is how to use it.

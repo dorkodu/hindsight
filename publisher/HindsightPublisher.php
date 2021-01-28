@@ -1,7 +1,7 @@
 <?php
   require "TerminalUI.php";
   require "CLITinkerer.php";
-  require "PharPublisher.php";
+  require "PharPackager.php";
   require "Timer.php";
   require "PerformanceProfiler.php";
 
@@ -14,11 +14,12 @@
 
       self::consoleLog("This will build, run tests and publish Hindsight project.");
 
-      $hindsightPhar = new PharPublisher('hindsight.phar', $sourcePath, $publishPath);
+      $hindsightPhar = new PharPackager('hindsight.phar', $sourcePath, $publishPath);
       $hindsightPhar->setDefaultStub("bootstrap.php");
       $hindsightPhar->setAfterEffect(function() {
         self::consoleLog("Build and published Hindsight successfully.");
       });
+
       $hindsightPhar->publish();
 
       $name = "hindsight";
