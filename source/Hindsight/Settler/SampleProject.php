@@ -200,5 +200,16 @@
 
       ";
     }
+
+    /**
+     * Generates README.txt content
+     *
+     * @return string
+     */
+    private static function generateReadmeContent()
+    {
+      return
+      "Hi there!\nThis is a simple guide to Hindsight.\nWell, if you want to see how it works, just try to 'compose' this project.\nIt means, run 'php hindsight compose' in this folder from the Terminal/Command Line\nIf it succeeds, open the index.html file in the \"composed\" directory. ";
+    }
   }
   
