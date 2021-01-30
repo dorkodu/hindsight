@@ -120,5 +120,23 @@
         throw new Exception("Couldn't create '".$folderName."' folder.");
       }
     }
+
+
+    /**
+     * Generates an empty, template string for hindsight.json
+     * 
+     * @return array the template string content of a hindsight.json file
+     */
+    private static function generateHindsightJsonTemplate()
+    {
+      return array(
+        "data" => array(
+          "title" => "This is a sample page title!",
+          "header" => "This is a header.",
+          "footer" => "<div class='footer'>This is the footer. You can write HTML for placeholders too! <br>It only needs to be a string.<div>"
+        )
+      );
+    }
+
   }
   
