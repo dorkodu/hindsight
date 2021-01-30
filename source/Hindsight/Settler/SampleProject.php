@@ -69,5 +69,23 @@
       } else throw new Exception("Couldn't create 'page.html'."); 
     }
 
+    /**
+     * Creates index.md
+     * 
+     * @param string $projectDirectory
+     * @return void
+     */
+    private static function createIndexMd(string $projectDirectory)
+    {
+      $MdPath = $projectDirectory . "/composed/index.md";
+
+      # create index.md
+      if (FileStorage::createFile($MdPath)) {
+        # write into page.html
+        $MdContents = self::generateMarkdownTemplate();
+        if (!FileStorage::putFileContents($MdPath, $MdContents))
+          throw new Exception("Couldn't write to '~/composed/index.md'.");
+      } else throw new Exception("Couldn't create '~/composed/index.md'."); 
+    }
   }
   
