@@ -49,5 +49,25 @@
   
       } else throw new Exception("Couldn't create hindsight.json file.");
     }
+      
+    /**
+     * Creates page.html
+     * 
+     * @param string $projectDirectory
+     * @return void
+     */
+    private static function createPageHtml(string $projectDirectory)
+    {
+      $pageHtmlPath = $projectDirectory . "/page.html";
+
+      # create page.html
+      if (FileStorage::createFile($pageHtmlPath)) {
+        # write into page.html
+        $pageHtmlContents = self::generateHTMLTemplate();
+        if (!FileStorage::putFileContents($pageHtmlPath, $pageHtmlContents))
+          throw new Exception("Couldn't write to 'page.html'.");
+      } else throw new Exception("Couldn't create 'page.html'."); 
+    }
+
   }
   
