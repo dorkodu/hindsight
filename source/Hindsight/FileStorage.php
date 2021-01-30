@@ -1,22 +1,27 @@
 <?php
 	namespace Hindsight;
   
-  # FileStorage is a utility for interacting with File System. It handles file / directory operations.
-	class FileStorage {
-		
-		public static function isUsefulDirectory($dirPath) {
+  /**
+   * FileStorage is a utility for interacting with File System. It handles file / directory operations.
+   */
+	class FileStorage 
+	{
+    public static function isUsefulDirectory($dirPath) 
+    {
 			if(is_dir($dirPath) && is_readable($dirPath) && is_writable($dirPath)) {
 				return true;
 			} else return false;
 		}
 		
-		public static function isUsefulFile($filePath) {
+    public static function isUsefulFile($filePath) 
+    {
 			if(is_file($filePath) && is_readable($filePath) && is_writable($filePath)) {
 				return true;
 			} else return false;
     }
     
-    public static function isUsefulNode($path) {
+    public static function isUsefulNode($path) 
+    {
 			if(self::isUsefulFile($path) || self::isUsefulDirectory($path)) {
 				return true;
 			} else return false;
@@ -25,7 +30,8 @@
 		/** 
 		 * @return boolean
 		 */
-		public static function createDirectory($directory, $permissions = 0777) {
+    public static function createDirectory($directory, $permissions = 0777) 
+    {
 			if(!empty($directory)) {
 				# is /loot/ dir exists and useful? if no create it
 				if(self::isUsefulDirectory($directory)) {
@@ -46,7 +52,8 @@
      * @return true on success
      * @return false on failure
      */
-		public static function createFile($filePath) {
+    public static function createFile($filePath) 
+    {
       if(is_string($filePath)) {
         # does file exist and useful? if no create it
         if(self::isUsefulFile($filePath))
@@ -67,7 +74,8 @@
      * @return true on success
      * @return false on failure
      */
-		public static function removeFile($filePath) {
+    public static function removeFile($filePath) 
+    {
       if(self::isUsefulFile($filePath) === false) {
         return true;
       } else {
@@ -113,7 +121,8 @@
      * @param string $targetDir
      * @return boolean true on success, false on failure
      */
-		public static function copyEverything($source, $targetDir) {
+    public static function copyEverything($source, $targetDir)
+    {
 			if(self::isUsefulDirectory($targetDir)) {
 				if(self::isUsefulDirectory($source)) {
 					if(!file_exists($targetDir)) { mkdir($targetDir, 0777); }
