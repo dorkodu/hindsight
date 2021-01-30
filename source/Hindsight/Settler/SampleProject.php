@@ -31,6 +31,23 @@
       # create README.txt
       self::createReadmeTxt($projectDirectory);
     }
+    
+    
+    /**
+     * Creates a folder inside the project directory
+     */
+    private static function createHindsightJson(string $projectDirectory)
+    {
+      $HindsightJsonPath = $projectDirectory."/hindsight.json";
+      
+      if (FileStorage::createFile($HindsightJsonPath)) {
 
+        $HindsightJson = new JsonFile($HindsightJsonPath);  
+        $HindsightJsonTemplate = self::generateHindsightJsonTemplate();
+        
+        $HindsightJson->write($HindsightJsonTemplate, true);
+  
+      } else throw new Exception("Couldn't create hindsight.json file.");
+    }
   }
   
