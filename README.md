@@ -75,36 +75,23 @@ Run Hindsight in that folder from terminal.
 
   Shows a simple documentation on Hindsight.
 
-## Guide
+## The Beginners Guide to Hindsight
 
-So, what to do? Well, simple.<br>Hindsight will generate a page for each of your markdown files.
+So, what to do? Well, simple.<br>
 
 - ### hindsight.json
 
-  Your website configuration file. It is a monolith settings file.<br>You define some properties here, about your website.
+  Your website data file. It is like a monolith settings file.<br>For now, you define placeholders here, which are in your HTML template file.
 
-  - #### placeholders
+  - #### data
 
     You give your **[placeholder] + [contents]** as **"key": "value"** pairs.<br>These placeholders will be replaced by their contents in each of your pages.  
     
-    There is a single reserved placeholder, which is **"$contents"**.<br>This points to where your Markdown contents will be injected into.<br>So do not forget to put this placeholder in your template.
-    
-  - #### assets 
-
-    This is an array of static files that you want to copy from **static/** folder to a path in **composed/** folder<br>You must give a **file name** and a path in **composed/** folder. 
-    
-    #### For example :
-    
-    You have `static/style.css` <br>You want to place this file into **assets/** folder in **composed/** folder.<br>Then, the field must be like this : `"style.css": "assets/style.css"`.
-    
-    This is actually a "copy to" directive for Hindsight. You give a file name and a new path.
-    
-    > #### NOTE
+    > #### Important !
     >
-    > The new path for your static file **_MUST_** be relative to **composed/** folder.<br>Hindsight will assume that your "copy to" path will be **_IN_** "composed/" folder.<br>These are rules. Sorry :(
-    
-    
-
+    > There is a reserved placeholder, which is **"$contents"**.<br>This points to where your Markdown contents will be injected into.<br>So **DO NOT FORGET** to put this placeholder in your template.
+  
+  
 - ### hindsight.lock
 
   Hindsight locks the current state of the website, into this file.<br>This is used for tracking changes in your contents.
@@ -113,7 +100,15 @@ So, what to do? Well, simple.<br>Hindsight will generate a page for each of your
 
   Your single HTML template file.<br>You put placeholders in this file. This is the pattern for placeholders : `{{ placeholder }}`<br>If you set "placeholder" to a string in hindsight.json, Hindsight will replace the placeholder with its value.
   
-  It can have any CSS or JS. Hindsight **DOES NOT** handle your assets.<br>You can put them into your **composed/** folder as how you wish.<br>Or use "assets" in hindsight.json to give "copy to" directives.
+  > Your template file can have any CSS or JS. Hindsight **DOES NOT (!)** handle your assets.<br>You can put them into your **composed/** folder as how you wish.<br>
+  
+- ### pages/
+
+  This is the folder you put your pages as Markdown files.<br>For each Markdown file in this folder, Hindsight will create a data-seeded HTML file with its name.<br>For example you have these two **".md "** files in **pages/** folder :
+
+  `index.md` + `about.md` 	>>	 `index.html` + `about.html`
+
+  You will get two **".html"** files in **composed/** folder.<br>Which are seeded with data you give in **hindsight.json** file. 
 
 ## Author
 
@@ -124,4 +119,3 @@ See also the list of [contributions](https://libre.dorkodu.com) that we are maki
 ## License
 
 Hindsight is open-sourced software licensed under the [MIT license](LICENSE).
-
