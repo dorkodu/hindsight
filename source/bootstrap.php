@@ -1,11 +1,10 @@
 <?php
   require_once "Hindsight/Utils/Psr4Autoloader.php";
+  require_once "Hindsight/Utils/CLITinkerer.php";
   
   use \Hindsight\Utils\Psr4Autoloader;
+  use \Hindsight\Utils\CLITinkerer;
   use \Hindsight\Hindsight;
-
-  error_reporting(0);
-
 
   $psr4Autoloader = new Psr4Autoloader();
   $psr4Autoloader->usePharMethod("hindsight.phar");
@@ -13,12 +12,41 @@
   
   # registering all namespaces used in Hindsight
   $psr4Autoloader->addNamespace("Hindsight\\", "Hindsight/");
-  $psr4Autoloader->addNamespace("Hindsight\\Dependency\\", "Hindsight/Dependency/");
-  $psr4Autoloader->addNamespace("Hindsight\\Json\\", "Hindsight/Json/");
-  $psr4Autoloader->addNamespace("Hindsight\\Utils\\", "Hindsight/Utils/");
-  $psr4Autoloader->addNamespace("Hindsight\\Weaver\\", "Hindsight/Weaver/");
 
+  # a global problem handler for the CLI app
+  $problemHandler = function($exception) {
+    Hindsight::problem($exception->getMessage());
+  };
 
-  # application logic :D
-  $hindsight = new Hindsight(realpath("."));
-  $hindsight->run();
+  # set problem handlers by default
+  set_error_handler($problemHandler);
+  set_exception_handler($problemHandler);
+
+  $command = CLITinkerer::getArgument(1);
+
+  # start the app :)
+  $hindsight = new Hindsight(".");
+
+  /**
+   * Hindsight's simple router :D
+   */
+  switch ($command) {
+    case 'about':
+      $hindsight->about();
+      break;
+    case 'help':
+      $hindsight->help();
+      break;
+    case 'init':
+      $hindsight->init();
+      break;
+    case 'compose':
+      $hindsight->compose();
+      break;
+    case 'status':
+      $hindsight->status();
+      break;
+    default:
+      $hindsight->greet();
+      break;
+  }
