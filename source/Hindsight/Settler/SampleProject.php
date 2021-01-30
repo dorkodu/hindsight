@@ -161,5 +161,44 @@
         </body>
       </html>';
     }
+
+    /**
+     * Generates a sample HTML template file content
+     *
+     * @return void
+     */
+    private static function generateMarkdownTemplate()
+    {
+      return
+      "
+      ## Wow! You have just created your first Hindsight project.
+
+      You write your content in Markdown. <br>Hindsight converts it to HTML, then puts inside your template **'page.html'** file.<br>The only limit is your imagination in Markdown !
+      
+      - This is an unordered list
+      - This is an unordered list
+        - This is a list inside list
+      
+      1. This is an ordered list
+      2. The second list element!
+      
+      [This is a permanent link.](#)
+      
+      [This is a link to Wikipedia.](https://wikipedia.org)
+      
+      > This is a quote!
+      
+      ------
+      
+      ```html
+      <p id='sample-paragraph'>This is a code block!</p>
+      ```
+      
+      | This is the first column | This is the second column |
+      | ------------------------ | ------------------------- |
+      | lorem ipsum              |                           |
+
+      ";
+    }
   }
   
