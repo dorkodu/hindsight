@@ -26,7 +26,7 @@
         $command = "";
 
       $output = array();
-      $directive = sprintf("php hindsight %s", $command);
+      $directive = sprintf("php sample/hindsight %s", $command);
       exec($directive, $output);
 
       $outputString = implode("\n", $output);
