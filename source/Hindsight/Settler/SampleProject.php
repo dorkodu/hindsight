@@ -1,46 +1,36 @@
 <?php
   namespace Hindsight\Settler;
 
-use Exception;
-use Hindsight\Settler\StateLocker;
-  use Hindsight\Settler\SettingsResolver;
+  use Exception;
+  use Hindsight\Settler\StateLocker;
   use Hindsight\FileStorage;
-  use Hindsight\Utils\CLITinkerer;
-  use Hindsight\Utils\TerminalUI;
   use Hindsight\Json\JsonFile;
-  use Hindsight\Json\JsonPreprocessor;
 
   class SampleProject
   {
+    /**
+     * Creates a sample project in given directory
+     *
+     * @param string $projectDirectory
+     */
     public static function create(string $projectDirectory)
     {
-      # hindsight.json production
-      $HindsightJsonPath = $projectDirectory."/hindsight.json";
+      # first, create hindsight.json
+      self::createHindsightJson($projectDirectory);
 
-      if (FileStorage::createFile($HindsightJsonPath)) {
-        $HindsightJson = new JsonFile($HindsightJsonPath);
+      # then create folders
+      self::createFolder($projectDirectory, "pages");
+      self::createFolder($projectDirectory, "composed");
+      
+      # create page.html template
+      self::createPageHtml($projectDirectory);
 
-        $HindsightJsonTemplate = self::generateHindsightJsonTemplate();
-        $HindsightJson->write($HindsightJsonTemplate, true);
-
-        if (FileStorage::createDirectory($projectDirectory."/pages")) {
-          if(FileStorage::createDirectory($projectDirectory."/composed")) {
-            if (FileStorage::createDirectory($projectDirectory."/assets")) {
-              
-            } else throw new Exception("Couldn't create 'assets' folder.");
-          } else throw new Exception("Couldn't create 'composed' folder.");
-        } else throw new Exception("Couldn't create 'pages' folder.");
-      } else throw new Exception("Couldn't create hindsight.json file.");
+      # create index.md template
+      self::createIndexMd($projectDirectory);
+      
+      # create README.txt
+      self::createReadmeTxt($projectDirectory);
     }
 
-    /**
-     * Generates an empty, template string for hindsight.json
-     * 
-     * @return array the template string content of a hindsight.json file
-     **/
-    private static function generateHindsightJsonTemplate()
-    {
-      return array("placeholders" => array(), "assets" => array());
-    }
   }
   
