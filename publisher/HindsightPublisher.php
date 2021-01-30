@@ -19,9 +19,8 @@
 
       $successPublished = is_file("hindsight.phar");
       $successRename = rename("hindsight.phar", self::PKG_NAME);
-      $successCopy = copy("hindsight", "sample/hindsight");
       
-      if ($successCopy && $successPublished && $successRename) {
+      if ( $successPublished && $successRename ) {
         self::consoleLog("Successfully published the Hindsight.");
 
         $resultOutput = self::runTests();
