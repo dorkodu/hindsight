@@ -105,5 +105,20 @@
           throw new Exception("Couldn't write to README.txt ~ But this isn't critical, ignore it.");
       } else throw new Exception("Couldn't create README.txt ~ But this isn't critical, ignore it."); 
     }
+
+    /**
+     * Creates a folder inside the root project directory
+     *
+     * @param string $projectDirectory
+     * @param string $folderName just the name of the folder
+     * @return void
+     */
+    private static function createFolder(string $projectDirectory, string $folderName)
+    {
+      # attempt to create a folder. if fails throw the exception!
+      if (!FileStorage::createDirectory($projectDirectory."/".$folderName)) {
+        throw new Exception("Couldn't create '".$folderName."' folder.");
+      }
+    }
   }
   
