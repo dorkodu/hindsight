@@ -17,6 +17,9 @@
     public function __construct(string $directory)
     {
       $this->directory = realpath($directory);
+
+      # get everything from the directory
+      $this->importDataFromDirectory();
     }
 
     public function getDirectory()
@@ -57,7 +60,7 @@
     {
       return (
         $this->isInitted()
-        && FileStorage::isUsefulDirectory($this->directory."/pages/") # does have "pages" folder
+        && FileStorage::isUsefulDirectory( $this->directory . "/pages/" ) # does have "pages" folder
       );
     }
 
@@ -70,8 +73,25 @@
     {
       return (
         $this->isProject()
-        && FileStorage::isUsefulDirectory($this->directory."/composed/") # does have "composed" folder?
+        && FileStorage::isUsefulDirectory( $this->directory . "/composed/" ) # does have "composed" folder?
       );
+    }
+
+    /**
+     * Imports website project data from the directory, into this object
+     *
+     * @return void
+     */
+    private function importDataFromDirectory()
+    {
+      # get JSON
+      $this->hindsightJson = $this->getHindsightJson();
+
+      # get HTML
+      $this->htmlTemplate = $this->getHTMLTemplate();
+
+      # get Markdown File List
+      $this->markdownList = $this->getMarkdownFileList();
     }
 
     /**
@@ -98,6 +118,7 @@
      * Gets HTML template contents
      *
      * @return string HTML template contents
+     * @return false on failure
      */
     public function getHTMLTemplate()
     {
@@ -127,7 +148,9 @@
             array_push($markdownFileList, $name);
           }
         }
+        # return the list
         return $markdownFileList;
+      
       } else return false;
     }
     
