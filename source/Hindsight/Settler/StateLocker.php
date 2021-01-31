@@ -58,6 +58,20 @@
     }
 
    /**
+    * Puts the lock hash to given file path
+    * 
+    * @param string $hash content that to put in Hindsight.lock
+    * @param string $filePath the Hindsight.lock file path
+    * 
+    * @return false on failure
+    * @return true on success
+    */
+    private static function pushLockState($hash, $directoryPath)
+    {
+      return FileStorage::putFileContents($directoryPath . "/" . self::LOCKFILE, $hash);
+    }
+
+   /**
     * Locks the dependency to the current state
     *
     * @param string $contents
