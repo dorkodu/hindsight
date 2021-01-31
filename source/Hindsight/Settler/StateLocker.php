@@ -71,6 +71,25 @@
       return FileStorage::putFileContents($directoryPath . "/" . self::LOCKFILE, $hash);
     }
 
+    /**
+    * Tells whether the current state is locked to a known state
+    * 
+    * @param string $directory
+    * @param string $contents
+    * @return boolean
+    */
+    public static function isStateLocked(string $directory, string $contents)
+    {
+      $lockFilePath = self::getLockFilePath($directory);
+      if ($lockFilePath !== false) {
+        $persistedState = self::pullLockState($lockFilePath);
+        $currentState = self::generateLockHash($contents);
+        if (Dorcrypt::compareHash($currentState, $persistedState)) {
+          return true;
+        } else return false;
+      } else return false;
+    }
+
    /**
     * Locks the dependency to the current state
     *
