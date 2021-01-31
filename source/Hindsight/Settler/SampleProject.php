@@ -196,7 +196,7 @@
       
       | This is the first column | This is the second column |
       | ------------------------ | ------------------------- |
-      | lorem ipsum              |                           |
+      |       hello world        |  just the second content  |
 
       ";
     }
