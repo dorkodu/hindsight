@@ -1,5 +1,5 @@
 <?php
-  namespace Hindsight\Dependency;
+  namespace Hindsight\Settler;
 
   use Hindsight\Json\JsonFile;
   use Hindsight\Json\JsonPreprocessor;
@@ -7,17 +7,17 @@
   class SettingsResolver
   {
     /**
-     * Returns the knotted array for a given package
+     * Returns the data array for a given website project
      *
-     * @param array $rootArray the root array of Hindsight.json
+     * @param array $rootArray the root array of hindsight.json
      * 
+     * @return array the data array for a website project
      * @return false on failure
-     * @return array the required array for package
      */
-    private static function getKnottedArray(array $rootArray)
+    private static function getDataArray($rootArray)
     {
       if (!empty($rootArray)) {
-        return self::getArrayFromArray("knotted", $rootArray);
+        return self::getArrayFromArray("data", $rootArray);
       } else return false; # stupid required array
     }
 
@@ -38,34 +38,33 @@
       } else return false; # not a desired array
     }
 
-    /**
-     * Parses the 'knotted' attribute of the root array of Hindsight.json and 
-     * returns a meaningful knotted's array
-     * 
-     * @param array $jsonAssocArray
-     */
-    private static function resolveKnotteds(array $jsonAssocArray)
+   /**
+    * Parses the 'data' attribute of the root array of hindsight.json and 
+    * returns a meaningful data array
+    * 
+    * @param array $jsonAssocArray
+    * @return void
+    */
+    private static function resolveData(array $jsonAssocArray)
     {
-      $knotteds = self::getKnottedArray($jsonAssocArray);
+      $data = self::getDataArray($jsonAssocArray);
 
-      if ($knotteds !== false) {
-        $namespacesList = self::getArrayFromArray('namespaces', $knotteds);
-        $classmap = self::getArrayFromArray('classmap', $knotteds);
+      if ($data !== false) {
+        /**
+         * This is how to use it
+         * $attribute = self::getArrayFromArray('attribute', $data);
+         */
 
-        if ($namespacesList === false)
-          $knotteds["namespaces"] = array();
-        if ($classmap === false)
-          $knotteds["classmap"] = array();
-        return $knotteds;
+        return $data;
       } else return false; # at any error
     }
   
     /**
-     * Resolves dependencies for a given package
+     * Resolves settings for a website project
      * 
-     * @param JsonFile jsonFile object for Hindsight.json file
+     * @param JsonFile jsonFile object for hindsight.json file
      * 
-     * @return array root dependencies array.
+     * @return array root array.
      * @return false on failure
      */
     public static function resolve(JsonFile $jsonFile)
@@ -78,13 +77,14 @@
           $jsonArray = JsonPreprocessor::parseJson($jsonContent);
           $rootArray = array();
 
-          $knottedArray = self::resolveKnotteds($jsonArray);
+          $dataArray = self::resolveData($jsonArray);
 
-          if ($knottedArray !== false) {
-            $rootArray["knotted"] = $knottedArray;
+          if ($dataArray !== false) {
+            $rootArray["data"] = $dataArray;
           }
 
           return $rootArray;
+        
         } else return false;
       } else return false;
     }
