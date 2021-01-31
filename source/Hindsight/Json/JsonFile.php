@@ -3,6 +3,9 @@
 	
 	use Hindsight\Json\JsonPreprocessor;
 	
+	/**
+	 * A class for representing JSON files
+	 */
 	class JsonFile {
     
     protected $path;
@@ -19,6 +22,11 @@
       return (is_file($this->path) && is_readable($this->path) && is_writable($this->path));
     }
 		
+		/**
+		 * Reads the contents of a file
+		 *
+		 * @return void
+		 */
     public function read() {
 			$json = file_get_contents($this->path);
 			if($json !== null || $json !== false) {
@@ -58,10 +66,14 @@
 			return false;
     }
 
-    /**
-     * modify file properties only if content modified
-     */
-    private function putContentsIfModified($path, $content)
+		/**
+     * Modify file properties only if content modified
+		 *
+		 * @param string $path
+		 * @param string $content
+		 * @return void
+		 */
+		private function putContentsIfModified($path, $content)
     {
         $currentContent = file_get_contents($path);
         if (!$currentContent || ($currentContent != $content)) {
