@@ -29,7 +29,6 @@
       } else return false;
     }
      
-
    /**
     * Generates a hash from given string. For now it uses Whirlpool hashing algorithm
     *
