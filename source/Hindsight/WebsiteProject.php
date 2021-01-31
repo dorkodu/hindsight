@@ -5,9 +5,9 @@
 
   class WebsiteProject
   {
-    protected string $directory;
-    protected JsonFile $hindsightJson;
-    protected $markdownList;
+    private string $directory;
+    private JsonFile $hindsightJson;
+    private $markdownList;
 
     /**
      * Class constructor.
@@ -78,7 +78,6 @@
     /**
      * Get Markdown file list in a project directory
      *
-     * @param string $directory
      * @return array list of markdown files in a directory
      * @return false on failure
      */
@@ -97,7 +96,23 @@
         return $markdownFileList;
       } else return false;
     }
-
     
+    /**
+     * Generates a state string by serializing the project properties
+     *
+     * @return string
+     */
+    public function getState()
+    {
+      $state = array();
+
+      $jsonContents = $this->hindsightJson->read();
+
+      $markdownList = $this->getMarkdownFileList();
+      
+      $state['hindsightJson'] = is_bool($jsonContents) ? "" : $jsonContents;
+      $state['markdownList'] = $this->getMarkdownFileList();
+      return serialize($state);
+    }
   }
   
