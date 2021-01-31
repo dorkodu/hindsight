@@ -55,6 +55,7 @@
 					throw $e;
 				}
 			}
+			return false;
     }
 
     /**
