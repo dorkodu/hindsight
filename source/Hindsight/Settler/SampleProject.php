@@ -15,6 +15,14 @@
      */
     public static function create(string $projectDirectory)
     {
+      /**
+       * - an empty hindsight.json
+       * - an empty README.txt file
+       * - composed/ folder for storing composed website
+       * - assets/ folder for storing static asset files
+       * - pages/ folder for storing MD files
+       */
+
       # first, create hindsight.json
       self::createHindsightJson($projectDirectory);
 
@@ -77,15 +85,15 @@
      */
     private static function createIndexMd(string $projectDirectory)
     {
-      $MdPath = $projectDirectory . "/composed/index.md";
+      $MdPath = $projectDirectory . "/pages/index.md";
 
       # create index.md
       if (FileStorage::createFile($MdPath)) {
         # write into page.html
         $MdContents = self::generateMarkdownTemplate();
         if (!FileStorage::putFileContents($MdPath, $MdContents))
-          throw new Exception("Couldn't write to '~/composed/index.md'.");
-      } else throw new Exception("Couldn't create '~/composed/index.md'."); 
+          throw new Exception("Couldn't write to '/pages/index.md'.");
+      } else throw new Exception("Couldn't create '/pages/index.md'."); 
     }
 
     /**
