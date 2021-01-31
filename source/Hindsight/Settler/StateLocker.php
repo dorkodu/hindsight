@@ -28,6 +28,19 @@
                       : false;
       } else return false;
     }
+     
+
+   /**
+    * Generates a hash from given string. For now it uses Whirlpool hashing algorithm
+    *
+    * @param string $contents
+    * @return string hashed content
+    * @return false on failure
+    */
+    public static function generateLockHash(string $contents)
+    {
+      return Dorcrypt::whirlpool($contents);
+    }
     
    /**
     * Locks the dependency to the current state
