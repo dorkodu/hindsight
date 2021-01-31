@@ -6,27 +6,15 @@
 
   class SettingsResolver
   {
-    /**
-     * Returns the data array for a given website project
-     *
-     * @param array $rootArray the root array of hindsight.json
-     * 
-     * @return array the data array for a website project
-     * @return false on failure
-     */
-    private static function getDataArray($rootArray)
-    {
-      if (!empty($rootArray)) {
-        return self::getArrayFromArray("data", $rootArray);
-      } else return false; # stupid required array
-    }
-
-    /**
-     * Returns an array element from an array
-     * 
-     * @return false on failure
-     * @return array on success
-     */
+   /**
+    * Returns an array element from an array
+    *
+    * @param int|string $needle
+    * @param array $haystack
+    *
+    * @return array on success
+    * @return false on failure
+    */
     private static function getArrayFromArray($needle, array $haystack)
     {
       if (array_key_exists($needle, $haystack)) {
@@ -47,16 +35,9 @@
     */
     private static function resolveData(array $jsonAssocArray)
     {
-      $data = self::getDataArray($jsonAssocArray);
-
-      if ($data !== false) {
-        /**
-         * This is how to use it
-         * $attribute = self::getArrayFromArray('attribute', $data);
-         */
-
-        return $data;
-      } else return false; # at any error
+      $data = self::getArrayFromArray("data", $jsonAssocArray);
+      # return if successfully get "data" sub-array from the root jsonAssocArray
+      return ($data !== false) ? $data : false;
     }
   
     /**
