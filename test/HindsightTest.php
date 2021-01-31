@@ -26,7 +26,7 @@
         $command = "";
 
       $output = array();
-      $directive = sprintf("php sample/hindsight %s", $command);
+      $directive = sprintf("php hindsight %s", $command);
       exec($directive, $output);
 
       $outputString = implode("\n", $output);
@@ -65,6 +65,8 @@
 
     public function runTests()
     {
+      $this->setUp();
+      
       # create a reflection class
       $reflectionClass = new \ReflectionClass( $this );
       $this->testClassName = $reflectionClass->getName();
