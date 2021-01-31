@@ -41,7 +41,22 @@
     {
       return Dorcrypt::whirlpool($contents);
     }
-    
+
+   /**
+    * Gets the lock hash from given file path
+    * 
+    * @param string $filePath the Hindsight.lock file path
+    * @return false when the content is empty or file is useless
+    * @return string the content of Hindsight.lock file
+    */
+    private static function pullLockState(string $filePath)
+    {
+      $hashContent = FileStorage::getFileContents($filePath);
+      if (is_string($hashContent) && !empty($hashContent)) {
+        return $hashContent;
+      } else return false;
+    }
+
    /**
     * Locks the dependency to the current state
     *
