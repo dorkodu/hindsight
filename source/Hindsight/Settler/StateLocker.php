@@ -10,7 +10,25 @@
   {
     private const LOCKFILE = "hindsight.lock";
     
-   
+   /**
+    * Returns the path of Hindsight.lock file in given directory
+    *
+    * @param $directoryPath
+    * @return string path of hindsight.lock file
+    * @return false on failure
+    */
+    private static function getLockFilePath(string $directory)
+    {
+      if (FileStorage::isUsefulDirectory($directory)) {
+        $lockFilePath = $directory . "/" . self::LOCKFILE;
+        if (FileStorage::isUsefulFile($lockFilePath)) {
+          return $lockFilePath;
+        } else return FileStorage::createFile($lockFilePath) 
+                      ? $lockFilePath 
+                      : false;
+      } else return false;
+    }
+    
    /**
     * Locks the dependency to the current state
     *
