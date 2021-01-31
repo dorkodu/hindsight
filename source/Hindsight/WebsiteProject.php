@@ -9,6 +9,7 @@
     private JsonFile $hindsightJson;
     private $markdownList; # type can vary - false|array|null - and this is useful for us
     private string $htmlTemplate;
+
     private const TEMPLATE_FILE = "page.html";
 
     /**
@@ -88,7 +89,7 @@
       $this->hindsightJson = $this->getHindsightJson();
 
       # get HTML
-      $this->htmlTemplate = $this->getHTMLTemplate();
+      $this->htmlTemplate = $this->getHTMLTemplateContents();
 
       # get Markdown File List
       $this->markdownList = $this->getMarkdownFileList();
@@ -120,7 +121,7 @@
      * @return string HTML template contents
      * @return false on failure
      */
-    public function getHTMLTemplate()
+    public function getHTMLTemplateContents()
     {
       if ($this->isInitted()) {
         if (FileStorage::isUsefulFile($this->directory . "/" . self::TEMPLATE_FILE)) {
