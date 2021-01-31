@@ -8,6 +8,8 @@
     private string $directory;
     private JsonFile $hindsightJson;
     private $markdownList; # type can vary - false|array|null - and this is useful for us
+    private string $htmlTemplate;
+    private const TEMPLATE_FILE = "page.html";
 
     /**
      * Class constructor.
@@ -80,15 +82,30 @@
      */
     private function getHindsightJson()
     {
-      if (FileStorage::isUsefulDirectory($this->projectDirectory)) {
+      if (FileStorage::isUsefulDirectory($this->directory)) {
         # Folder is useful. Hindsight is running.
         if ($this->isInitted()) {
-          $HindsightJson = new JsonFile($this->projectDirectory."/hindsight.json");
+          $HindsightJson = new JsonFile($this->directory."/hindsight.json");
           # return HindsightJson if useful
           if ($HindsightJson->isUseful()) {
             return $HindsightJson;
           } else return false;
         } else return false;
+      } else return false;
+    }
+
+    /**
+     * Gets HTML template contents
+     *
+     * @return string HTML template contents
+     */
+    public function getHTMLTemplate()
+    {
+      if ($this->isInitted()) {
+        if (FileStorage::isUsefulFile($this->directory . "/" . self::TEMPLATE_FILE)) {
+          $contents = file_get_contents($this->directory . "/" . self::TEMPLATE_FILE);
+          return $contents;
+        } else return false;        
       } else return false;
     }
 
