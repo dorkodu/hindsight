@@ -29,16 +29,6 @@
     }
 
     /**
-     * Just a wrapper for checking project folder usefulness
-     *
-     * @return boolean
-     */
-    public function inUsefulDirectory()
-    {
-      return FileStorage::isUsefulDirectory($this->directory);
-    }
-
-    /**
      * Checks if the directory is already processed by Hindsight
      *
      * @return boolean
