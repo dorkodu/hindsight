@@ -17,7 +17,46 @@
       $this->directory = realpath($directory);
     }
 
-   /**
+    /**
+     * Checks if the directory is already processed by Hindsight
+     *
+     * @return boolean
+     */
+    private function isInitted()
+    {
+      return ( 
+        FileStorage::isUsefulFile($this->directory."/hindsight.json")
+        && FileStorage::isUsefulFile($this->directory."/hindsight.lock")
+      );
+    }
+
+    /**
+     * Checks if the directory is already processed by Hindsight
+     *
+     * @return boolean
+     */
+    private function isProject()
+    {
+      return (
+        $this->isInitted() # is initted a project
+        && FileStorage::isUsefulDirectory($this->directory."/pages/") # does have "pages" folder
+      );
+    }
+
+    /**
+     * Checks if the directory is already processed by Hindsight
+     *
+     * @return boolean
+     */
+    private function isCompleteProject()
+    {
+      return (
+        $this->isProject() # is initted a project
+        && FileStorage::isUsefulDirectory($this->directory."/composed/") # does have "composed" folder?
+      );
+    }
+
+    /**
      * Returns the 'hindsight.json' JsonFile for the project directory
      *
      * @return JsonFile $hindsightJson object
@@ -36,5 +75,6 @@
         } else return false;
       } else return false;
     }
+    
   }
   
