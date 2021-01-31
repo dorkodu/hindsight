@@ -75,6 +75,29 @@
         } else return false;
       } else return false;
     }
+    /**
+     * Get Markdown file list in a project directory
+     *
+     * @param string $directory
+     * @return array list of markdown files in a directory
+     * @return false on failure
+     */
+    private function getMarkdownFileList()
+    {
+      if (FileStorage::isUsefulDirectory($this->directory)) {
+        
+        $list = glob( $this->directory . "pages/*.md" );
+        $markdownFileList = array();
+        
+        foreach ($list as $name) {
+          if (FileStorage::isUsefulFile($name)) {
+            array_push($markdownFileList, $name);
+          }
+        }
+        return $markdownFileList;
+      } else return false;
+    }
+
     
   }
   
