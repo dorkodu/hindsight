@@ -6,9 +6,9 @@
   class WebsiteProject
   {
     private string $directory;
-    private JsonFile $hindsightJson;
+    private $hindsightJson;
     private $markdownList; # type can vary - false|array|null - and this is useful for us
-    private string $htmlTemplate;
+    private $htmlTemplate;
 
     private const TEMPLATE_FILE = "page.html";
 
