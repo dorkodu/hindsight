@@ -77,10 +77,8 @@
     {
       # get JSON
       $this->hindsightJson = $this->getHindsightJson();
-
       # get HTML
       $this->htmlTemplate = $this->getHTMLTemplateContents();
-
       # get Markdown File List
       $this->markdownList = $this->getMarkdownFileList();
     }
@@ -131,7 +129,7 @@
     {
       if (FileStorage::isUsefulDirectory($this->directory)) {
         
-        $list = glob( $this->directory . "pages/*.md" );
+        $list = glob( $this->directory . "/pages/*.md" );
         $markdownFileList = array();
         
         foreach ($list as $name) {
@@ -154,22 +152,27 @@
     {
       $state = array();
       
-      # resolve hindsight.json 
+      # RESOLVE hindsight.json 
       if ($this->hindsightJson !== false) {
+
         $jsonContents = $this->hindsightJson->read();
         $state['hindsightJson'] = is_bool($jsonContents) ? "" : $jsonContents;
+      
       } else {
         $state['hindsightJson'] = "";
       }
 
-      # resolve markdown list
+      # RESOLVE markdown list
       if ($this->markdownList !== false) {
+
         $markdownList = $this->getMarkdownFileList();
         $state['markdownList'] = is_bool($markdownList) ? array() : $markdownList;
+      
       } else {
         $state['markdownList'] = array();
       }
 
+      # serialize what you got, return it
       return serialize($state);
     }
   }
