@@ -152,6 +152,11 @@
       }
     }
 
+    /**
+     * Locks the project state if something is untracked
+     *
+     * @return void
+     */
     private function lockIfStateIsUntracked()
     {
       if ($this->isStateLocked() === false) {
@@ -168,6 +173,8 @@
     {
       # the serialized state of the project
       $state = $this->website->getState();
+
+      echo "\n\n " . $state . "\n\n";
       # lock the state, return the result
       if(StateLocker::lock( $state, $this->website->getDirectory()) === false) {
         self::problem("Couldn't lock the state.");
@@ -196,14 +203,16 @@
      */
     public function compose()
     {
-      if ($this->webiste->isInitted()) {
+      if ($this->website->isInitted()) {
         self::consoleLog("Current folder is initted. Hindsight is running.");
 
         # if is a project, "compose" it
         if ($this->website->isProject()) {
           # COMPOSE
+          
           # after you compose it, lock the state
-          $this->lockState();
+          $this->lockIfStateIsUntracked();
+
         } else self::problem("This is not a complete project. Please create your contents, or use 'init' to create a sample project.");
       } else self::problem("Folder is not initted. Please run 'init' before to create a new Hindsight project.");
     }
