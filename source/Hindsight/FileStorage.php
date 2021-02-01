@@ -110,7 +110,7 @@
     public static function putFileContents($filePath, $content)
     {
       if (self::isUsefulFile($filePath)) {
-        return is_int(file_put_contents($filePath, $content));
+        return (file_put_contents($filePath, $content) !== false) ? true : false;
       } else return false;
     }
 
