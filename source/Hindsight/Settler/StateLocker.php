@@ -21,12 +21,13 @@
     {
       if (FileStorage::isUsefulDirectory($directory)) {
         $lockFilePath = $directory . "/" . self::LOCKFILE;
+
         if (FileStorage::isUsefulFile($lockFilePath)) {
           return $lockFilePath;
-        } else return FileStorage::createFile($lockFilePath) 
-                      ? $lockFilePath 
-                      : false;
-      } else return false;
+        } else {
+          return FileStorage::createFile($lockFilePath) ? $lockFilePath : false;
+        }
+       } else return false;
     }
      
    /**
@@ -65,9 +66,9 @@
     * @return false on failure
     * @return true on success
     */
-    private static function pushLockState($hash, $directoryPath)
+    private static function pushLockState($hash, $lockFilePath)
     {
-      return FileStorage::putFileContents($directoryPath . "/" . self::LOCKFILE, $hash);
+      return FileStorage::putFileContents($lockFilePath, $hash);
     }
 
     /**
@@ -81,9 +82,11 @@
     {
       $lockFilePath = self::getLockFilePath($directory);
       if ($lockFilePath !== false) {
-        $persistedState = self::pullLockState($lockFilePath);
-        $currentState = self::generateLockHash($contents);
-        if (Dorcrypt::compareHash($currentState, $persistedState)) {
+
+        $persistedStateHash = self::pullLockState($lockFilePath);
+        $currentStateHash = self::generateLockHash($contents);
+        
+        if (Dorcrypt::compareHash($persistedStateHash, $currentStateHash)) {
           return true;
         } else return false;
       } else return false;
@@ -103,9 +106,11 @@
       } else {
         $lockFilePath = self::getLockFilePath($directory);
         if ($lockFilePath !== false) {
-          $currentState = self::generateLockHash($contents);
-          return self::pushLockState($currentState, $lockFilePath);
-       } else return false;
+
+          $currentStateHash = self::generateLockHash($contents);
+          return self::pushLockState($currentStateHash, $lockFilePath);
+       
+        } else return false;
       }
     }
   }
