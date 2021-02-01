@@ -47,12 +47,38 @@
      */
     public static function parseTokensWithKeys(string $template, string $tokenPattern)
     {
-      $parsed = parseHTMLTemplate($template, $tokenPattern);
-      $keys = getKeysFromParseResults($parsed);
-      $tokens = getTokensFromParseResults($parsed);
+      $parsed = self::parseHTMLTemplate($template, $tokenPattern);
+      $keys = self::getKeysFromParseResults($parsed);
+      $tokens = self::getTokensFromParseResults($parsed);
 
       $keyWithTokenList = array_combine($keys, $tokens);
       return $keyWithTokenList;
+    }
+
+    /**
+     * Returns placeholder key list from parse results
+     *
+     * @param array $parseResults
+     * @return array
+     */
+    public static function getKeysFromParseResults(array $parseResults)
+    {
+      return array_map(
+        function($item) { return trim($item); }
+        ,$parseResults[1]
+      );
+    }
+
+    /**
+     * Gets replacable tokens from parse results of HTML template
+     *
+     * @param array $parseResults
+     * @return array token list
+     */
+    public static function getTokensFromParseResults(array $parseResults)
+    {
+      $tokensList = $parseResults[0];
+      return $tokensList;
     }
   }
   
