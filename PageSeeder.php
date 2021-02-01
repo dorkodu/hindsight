@@ -36,5 +36,23 @@
         return $results;
       } else return false;
     }
+
+    /**
+     * Parses tokens with keys, use this to seed template
+     *
+     * @param string $template
+     * @param string $tokenPattern ~ RegEx pattern for tokens
+     *
+     * @return array
+     */
+    public static function parseTokensWithKeys(string $template, string $tokenPattern)
+    {
+      $parsed = parseHTMLTemplate($template, $tokenPattern);
+      $keys = getKeysFromParseResults($parsed);
+      $tokens = getTokensFromParseResults($parsed);
+
+      $keyWithTokenList = array_combine($keys, $tokens);
+      return $keyWithTokenList;
+    }
   }
   
