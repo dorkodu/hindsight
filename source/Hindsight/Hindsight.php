@@ -204,12 +204,17 @@
     public function compose()
     {
       if ($this->website->isInitted()) {
-        self::consoleLog("Current folder is initted. Hindsight is running.");
+
+        self::consoleLog("OK. Folder is already initted.");
 
         # if is a project, "compose" it
         if ($this->website->isProject()) {
           # COMPOSE
-          
+          self::consoleLog("Your project is ready. Will compose it.");
+
+          # compose it! really simple right !?
+          WebsiteComposer::compose($this->website);
+
           # after you compose it, lock the state
           $this->lockIfStateIsUntracked();
 
