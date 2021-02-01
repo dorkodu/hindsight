@@ -153,11 +153,23 @@
     public function getState()
     {
       $state = array();
-      $jsonContents = $this->hindsightJson->read();
-      $markdownList = $this->getMarkdownFileList();
       
-      $state['hindsightJson'] = is_bool($jsonContents) ? "" : $jsonContents;
-      $state['markdownList'] = $this->getMarkdownFileList();
+      # resolve hindsight.json 
+      if ($this->hindsightJson !== false) {
+        $jsonContents = $this->hindsightJson->read();
+        $state['hindsightJson'] = is_bool($jsonContents) ? "" : $jsonContents;
+      } else {
+        $state['hindsightJson'] = "";
+      }
+
+      # resolve markdown list
+      if ($this->markdownList !== false) {
+        $markdownList = $this->getMarkdownFileList();
+        $state['markdownList'] = is_bool($markdownList) ? array() : $markdownList;
+      } else {
+        $state['markdownList'] = array();
+      }
+
       return serialize($state);
     }
   }
