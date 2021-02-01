@@ -22,5 +22,19 @@
 
       return $contents;
     }
+    
+    /**
+     * Parses a text and returns data for parsing
+     *
+     * @return array parse results
+     * @return false on failure
+     */
+    public static function parseHTMLTemplate(string $template)
+    {
+      if($template !== "") {
+        preg_match_all(self::TOKEN_PATTERN, $template, $results);
+        return $results;
+      } else return false;
+    }
   }
   
