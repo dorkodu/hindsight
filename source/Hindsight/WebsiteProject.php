@@ -28,6 +28,16 @@
       return $this->directory;
     }
 
+    public function getMarkdownList()
+    {
+      return $this->markdownList;
+    }
+
+    public function getHTMLTemplate()
+    {
+      return $this->htmlTemplate;
+    }
+
     /**
      * Checks if the directory is already processed by Hindsight
      *
@@ -109,7 +119,7 @@
      * @return string HTML template contents
      * @return false on failure
      */
-    public function getHTMLTemplateContents()
+    private function getHTMLTemplateContents()
     {
       if ($this->isInitted()) {
         if (FileStorage::isUsefulFile($this->directory . "/" . self::TEMPLATE_FILE)) {
