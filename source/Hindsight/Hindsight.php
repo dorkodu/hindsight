@@ -152,6 +152,13 @@
       }
     }
 
+    public function lockIfHasUntrackedState()
+    {
+      if ($this->isStateLocked() === false) {
+        $this->lockState();
+      }
+    }
+
     /**
      * Locks the current state of the app
      *
@@ -162,10 +169,10 @@
       # the serialized state of the project
       $state = $this->website->getState();
       # lock the state, return the result
-      return StateLocker::lock( $state, $this->website->getDirectory() );
+      if(StateLocker::lock( $state, $this->website->getDirectory()) === false) {
+        self::problem("Couldn't lock the state.");
+      }
     }
-
-
 
     /**
      * Tells if the current state is locked
