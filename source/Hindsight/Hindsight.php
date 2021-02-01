@@ -152,7 +152,7 @@
       }
     }
 
-    public function lockIfHasUntrackedState()
+    private function lockIfStateIsUntracked()
     {
       if ($this->isStateLocked() === false) {
         $this->lockState();
