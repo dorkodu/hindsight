@@ -33,7 +33,7 @@
     public static function titledParagraph($title, $content)
     {
       self::bold("  ".$title);
-      CLITinkerer::writeLine("  ".$content);
+      CLITinkerer::writeLine("\n  ".$content);
     }
 
     public static function dictionaryEntry($title, $content)
