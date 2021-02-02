@@ -87,6 +87,20 @@ So, what to do? Well, simple.<br>
     > #### Important !
     >
     > There is a reserved placeholder, which is **{{ $markdown }}**.<br>This points to where your Markdown contents will be injected into.<br>So **DO NOT FORGET** to put this placeholder in your template !
+    
+    This is a sample **hindsight.json** :
+    
+    ```json
+    {
+      "data": {
+        "title": "Hello!",
+        "contents": "This is some text.",
+        "author": "Doruk Dorkodu"
+      }
+    }
+    ```
+    
+    
   
 - ### hindsight.lock
 

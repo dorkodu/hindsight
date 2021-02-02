@@ -1,6 +1,12 @@
 # Hindsight ~ Change Log
 
-### 0.1.0 (January 26, 2021) 
+### 0.1.0 (February 02, 2021) 
+
+---
+
+- Initial public release
+
+### First commit (January 26, 2021) 
 
 ---
 
