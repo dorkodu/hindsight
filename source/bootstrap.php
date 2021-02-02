@@ -14,7 +14,7 @@
   $psr4Autoloader->addNamespace("Hindsight\\", "Hindsight/");
 
   # a global problem handler for the CLI app
-  $problemHandler = function(\Exception $exception) {
+  $problemHandler = function($exception) {
     Hindsight::problem($exception->__toString());
   };
 
