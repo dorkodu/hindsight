@@ -2,8 +2,10 @@
   namespace Hindsight;
 
   use Exception;
+  use Parsedown;
   use Hindsight\Json\JsonFile;
   use Hindsight\Settler\SettingsResolver;
+  use Hindsight\PageSeeder;
 
   class WebsiteComposer
   {
@@ -15,21 +17,54 @@
      */
     public static function compose(WebsiteProject $website)
     {
-       # get all markdown files list
-          # if has any files, 
-          # get html template string
-          # get js data array
-          # generate a seeded html
-          # keep that seeded html in memory
-       # for each markdown file, 
-          # markdown -> parse 2 HTML -> embed to seeded html -> save that html file    
-                
+      # get all markdown files list
       $markdownFileList = $website->getMarkdownList();
       $validatedMarkdownList = self::validateMarkdownFileList($markdownFileList);
       
+      # if has any files ...
       if($validatedMarkdownList !== false) {
+        # get html template string
+        $templateString = $website->getHTMLTemplate();
+        # get js data array
+        $seedData = $website->getSeedData();
         
-      } else throw new Exception("No markdown files found, or Markdown files was invalid. Please give it another shot!");
+        if ($seedData !== false) {
+          # keep that seeded html in memory
+          $seededTemplate = PageSeeder::seed($templateString, $seedData);
+          
+          # for each markdown file,
+          foreach ($markdownFileList as $markdownFile) {
+            $parsedMarkdown = self::parseMarkdownToHTML($markdownFile);
+            
+            if ($parsedMarkdown !== false) {
+              # markdown -> parse to HTML -> embed to seeded html -> save that html file
+              $contents = PageSeeder::replaceToken(PageSeeder::TOKEN_MARKDOWN, $parsedMarkdown, $seededTemplate);
+            } else throw new Exception("Couldn't parse your Markdown.");
+            
+          }
+          
+        } else throw new Exception("Couldn't resolve your seed data from hindsight.json.");
+      } else throw new Exception("No Markdown files found, or file list was invalid. Please give it another shot!");
+    }
+
+    /**
+     * Parses a given Markdown file contents to HTML
+     *
+     * @param string $markdownPath
+     * 
+     * @return string markdown file path
+     * @return false on failure
+     */
+    private static function parseMarkdownToHTML(string $markdownPath)
+    {
+      if (FileStorage::isUsefulFile($markdownPath)) {
+        $markdownContents = FileStorage::getFileContents($markdownPath);
+        
+        $parsedown = new Parsedown();
+        $html = $parsedown->text($markdownPath);
+         # prints: <p>Hello <em>Parsedown</em>!</p>
+         return $html;
+      } else return false;
     }
 
     /**
@@ -38,7 +73,7 @@
      * @param $markdownFileList
      * 
      * @return array a validated and filtered list of markdown files
-     * @return false on failure
+     * @throws Exception on failure
      */
     private static function validateMarkdownFileList($markdownFileList)
     {
@@ -57,10 +92,11 @@
               } else return false;
             }
           );
+          
           # return the filtered file list
           return $filtered;
-        } else return false;
-      } else return false;
+
+        } else throw new Exception("No Markdown files found. Please, create your contents first :)");
+      } else throw new Exception("Invalid Markdown file list. Please give it another shot!");
     }
   }
-  
