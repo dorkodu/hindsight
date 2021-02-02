@@ -3,7 +3,8 @@
   
   class PageSeeder
   {
-    private const TOKEN_PATTERN = "/{{ ([a-zA-Z0-9$-_.]+) }}/";
+    public const TOKEN_PATTERN = "/{{ ([a-zA-Z0-9$-_.]+) }}/";
+    public const TOKEN_MARKDOWN = '$markdown';
 
     /**
      * Seeds data to a text
@@ -16,13 +17,49 @@
     public static function seed(string $template, array $data)
     {
       $combinedTokens = self::parseTokensWithKeys($template, self::TOKEN_PATTERN);
-      print_r($combinedTokens);
-
       $contents = self::replacePlaceholders($template, $combinedTokens, $data);
 
       return $contents;
     }
-    
+
+    /**
+     * Replaces placeholders with seed data
+     *
+     * @param string $template
+     * @param string[] $tokens
+     * @param string[] $seedData
+     *
+     * @return string The string whose tokens are replaced with seed data
+     */
+    public static function replacePlaceholders(string $contents, array $tokens, array $seedData)
+    {
+      # iterates through tokens list
+      foreach ($tokens as $key => $token) {
+        # sets a token value
+        $tokenValue = ( isset($seedData[$key])
+                      && is_string($seedData[$key]) )
+                      ? $seedData[$key]
+                      : false;
+
+        if ($tokenValue !== false) {
+          # replace each token by key-value pairs
+          $contents = self::replaceToken($key, $tokenValue, $contents);
+        } else { continue; }
+      }
+      # returns seeded contents
+      return $contents;
+    }
+
+    /**
+     * Replaces a token by its key and its value
+     *
+     * @return void
+     */
+    public static function replaceToken(string $tokenKey, string $value, string $contents)
+    {
+      return str_replace($tokenKey, $value, $contents);
+    }
+
     /**
      * Parses a text and returns data for parsing
      *
@@ -52,6 +89,12 @@
       $tokens = self::getTokensFromParseResults($parsed);
 
       $keyWithTokenList = array_combine($keys, $tokens);
+
+      # remove if key and its value for MARKDOWN TOKEN exists
+      if (array_key_exists(self::TOKEN_MARKDOWN, $keyWithTokenList)) {
+        unset($keyWithTokenList[self::TOKEN_MARKDOWN]);
+      }
+
       return $keyWithTokenList;
     }
 
@@ -77,8 +120,7 @@
      */
     public static function getTokensFromParseResults(array $parseResults)
     {
-      $tokensList = $parseResults[0];
-      return $tokensList;
+      return $parseResults[0];
     }
   }
   
