@@ -21,9 +21,9 @@ Give these to Hindsight and get what you want as a static website!
 ## How?
 
 Simple. Here is a formula, if we were to think Hindsight as a math function :
-$$
-Hindsight(JSON+HTML+Markdown) = website
-$$
+
+_**Hindsight ( JSON + HTML + Markdown ) = website**_
+
 Create a folder for your website project.<br>
 
 > ### NOTE
