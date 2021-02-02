@@ -6,6 +6,7 @@
   use Hindsight\Settler\SettingsResolver;
   use Hindsight\Utils\CLITinkerer;
   use Hindsight\Utils\TerminalUI;
+  use Hindsight\WebsiteComposer\WebsiteProject;
 
   class Hindsight
   {
@@ -211,7 +212,7 @@
         if ($this->website->isProject()) {
           # COMPOSE
           self::consoleLog("Your project is ready. Will compose it.");
-
+          
           # compose it! really simple right !?
           WebsiteComposer::compose($this->website);
 

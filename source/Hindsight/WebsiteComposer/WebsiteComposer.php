@@ -32,10 +32,11 @@
           
           # keep that seeded html in memory
           $seededTemplate = PageSeeder::seed($templateString, $seedData);
+          $composedFolder = $website->getDirectory() . "/composed";
           
           # for each markdown file,
           foreach ($markdownFileList as $markdownFile) {
-            self::createHTMLFileFromMarkdown($seededTemplate, $markdownFile, $website->getDirectory());
+            self::createHTMLFileFromMarkdown($seededTemplate, $markdownFile, $composedFolder);
           }
 
         } else throw new Exception("Couldn't resolve your seed data from hindsight.json.");
