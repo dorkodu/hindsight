@@ -212,17 +212,25 @@
         # if is a project, "compose" it
         if ($this->website->isProject()) {
           # COMPOSE
-          self::consoleLog("Your project is ready. Will compose it.");
+          self::consoleLog("Your project is ready.");
+
+          if ($this->isStateLocked()) {
+            self::notice("There are no changes. Website is up-to-date !");
+          } else {
+            
+            self::consoleLog("There are untracked changes. Hindsight will compose a new fresh website !");
+
+            # compose it! really simple right !?
+            WebsiteComposer::compose($this->website);
+
+            # after you compose it, lock the state
+            $this->lockIfStateIsUntracked();
+
+            # SUCCEED !
+            self::consoleLog("Hindsight successfully composed your project.");
+            self::consoleLog("Done.");
+          }
           
-          # compose it! really simple right !?
-          WebsiteComposer::compose($this->website);
-
-          # after you compose it, lock the state
-          $this->lockIfStateIsUntracked();
-
-          # SUCCEED !
-          self::consoleLog("Hindsight successfully composed your project.");
-          self::consoleLog("Done.");
 
         } else self::problem("This is not a complete project. Please create your contents, or use 'init' to create a sample project.");
       } else self::problem("Folder is not initted. Please run 'init' before to create a new Hindsight project.");
