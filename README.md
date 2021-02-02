@@ -50,11 +50,11 @@ Run Hindsight in that folder from terminal.
   |-- hindsight.json
   |-- hindsight.lock
   |-- composed/
-  		|-- index.html
-  		|-- <page-name>.html
+    |-- index.html
+    |-- <page-name>.html
   |-- pages/
-  		|-- index.md
-  		|-- <page-name>.md
+    |-- index.md
+    |-- <page-name>.md
   		···
   ```
   
