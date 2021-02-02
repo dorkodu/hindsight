@@ -7,6 +7,7 @@
   use Hindsight\Utils\CLITinkerer;
   use Hindsight\Utils\TerminalUI;
   use Hindsight\WebsiteComposer\WebsiteProject;
+  use Hindsight\WebsiteComposer\WebsiteComposer;
 
   class Hindsight
   {

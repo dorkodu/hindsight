@@ -1,5 +1,7 @@
 <?php
 
+namespace Hindsight\Utils;
+
 #
 #
 # Parsedown

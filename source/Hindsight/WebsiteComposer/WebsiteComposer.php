@@ -1,8 +1,8 @@
 <?php
   namespace Hindsight\WebsiteComposer;
 
-  use Exception;
-  use Parsedown;
+  use \Exception;
+  use Hindsight\Utils\Parsedown;
   use Hindsight\FileStorage;
   use Hindsight\WebsiteComposer\PageSeeder;
 
@@ -60,7 +60,7 @@
       if ($parsedMarkdown !== false) {
 
         # markdown -> parse to HTML -> embed to seeded html -> save that html file
-        $contents = PageSeeder::replaceToken(PageSeeder::TOKEN_MARKDOWN, $parsedMarkdown, $rootDirectory);
+        $contents = PageSeeder::replaceToken(PageSeeder::TOKEN_MARKDOWN, $parsedMarkdown, $template);
         $htmlPath = $rootDirectory . "/" . $markdownPageName . ".html";        
 
         if (!FileStorage::isUsefulFile( $htmlPath )) {
