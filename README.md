@@ -44,24 +44,21 @@ Run Hindsight in that folder from terminal.
 
   ```bash
   [ROOT]
-  |-- README.md
+  |-- README.txt
   |-- hindsight.json
   |-- hindsight.lock
   |-- composed/
+  		|-- index.html
+  		|-- <page-name>.html
   |-- pages/
   		|-- index.md
   		|-- <page-name>.md
   		···
-  |-- assets/
-  		|-- <your-style>.css
-  		···
-  		|-- <your-script>.js
-  		···
   ```
-
+  
 - ### compose
 
-  Composes your website and publishes into ***composed/*** folder.<br>You can directly upload what is inside ***composed/*** folder, to your server.<br>If you wish, you can also put some more stuff in. Like images, assets. Anything.<br>It's freedom !
+  Composes your website and publishes into ***composed/*** folder.<br>You can directly upload what is inside ***composed/*** folder, to your server.<br>If you wish, you can also put some more stuff in. Like images, CSS, JS. Anything.<br>It's freedom !
 
 - ### status
 
@@ -89,8 +86,7 @@ So, what to do? Well, simple.<br>
     
     > #### Important !
     >
-    > There is a reserved placeholder, which is **"$contents"**.<br>This points to where your Markdown contents will be injected into.<br>So **DO NOT FORGET** to put this placeholder in your template.
-  
+    > There is a reserved placeholder, which is **{{ $markdown }}**.<br>This points to where your Markdown contents will be injected into.<br>So **DO NOT FORGET** to put this placeholder in your template !
   
 - ### hindsight.lock
 
