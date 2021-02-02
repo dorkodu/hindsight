@@ -2,6 +2,7 @@
   namespace Hindsight;
 
   use Hindsight\Json\JsonFile;
+  use Hindsight\Settler\SettingsResolver;
 
   class WebsiteProject
   {
@@ -9,6 +10,7 @@
     private $hindsightJson;
     private $markdownList; # type can vary - false|array|null - and this is useful for us
     private $htmlTemplate;
+    private $seedData;
 
     private const TEMPLATE_FILE = "page.html";
 
@@ -36,6 +38,10 @@
     public function getHTMLTemplate()
     {
       return $this->htmlTemplate;
+    }
+
+    public function getSeedData() {
+      return $this->seedData;
     }
 
     /**
@@ -91,6 +97,22 @@
       $this->htmlTemplate = $this->getHTMLTemplateContents();
       # get Markdown File List
       $this->markdownList = $this->getMarkdownFileList();
+      # parse data from JSON
+      $this->seedData = $this->resolveSeedData();
+    }
+
+    /**
+     * Resolve seed data
+     *
+     * @return array the "data" field of root JSON
+     * @return false on failure
+     */
+    private function resolveSeedData()
+    {
+      if ($this->hindsightJson !== false) {
+        $rootArray = SettingsResolver::resolve($this->hindsightJson);
+        return $dataArray = (isset($rootArray['data']) && $rootArray !== false) ? $rootArray['data'] : false;
+      } else return false;
     }
 
     /**
@@ -174,10 +196,7 @@
 
       # RESOLVE markdown list
       if ($this->markdownList !== false) {
-
-        $markdownList = $this->getMarkdownFileList();
-        $state['markdownList'] = is_bool($markdownList) ? array() : $markdownList;
-      
+        $state['markdownList'] = is_bool($this->markdownList) ? array() : $this->markdownList;
       } else {
         $state['markdownList'] = array();
       }
