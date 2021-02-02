@@ -220,6 +220,10 @@
           # after you compose it, lock the state
           $this->lockIfStateIsUntracked();
 
+          # SUCCEED !
+          self::consoleLog("Hindsight successfully composed your project.");
+          self::consoleLog("Done.");
+
         } else self::problem("This is not a complete project. Please create your contents, or use 'init' to create a sample project.");
       } else self::problem("Folder is not initted. Please run 'init' before to create a new Hindsight project.");
     }

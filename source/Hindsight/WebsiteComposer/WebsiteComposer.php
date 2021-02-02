@@ -60,7 +60,7 @@
       if ($parsedMarkdown !== false) {
 
         # markdown -> parse to HTML -> embed to seeded html -> save that html file
-        $contents = PageSeeder::replaceToken(PageSeeder::TOKEN_MARKDOWN, $parsedMarkdown, $template);
+        $contents = PageSeeder::replaceToken("{{ " . PageSeeder::TOKEN_MARKDOWN . " }}", $parsedMarkdown, $template);
         $htmlPath = $rootDirectory . "/" . $markdownPageName . ".html";        
 
         if (!FileStorage::isUsefulFile( $htmlPath )) {
@@ -91,7 +91,7 @@
         $markdownContents = FileStorage::getFileContents($markdownPath);
         
         $parsedown = new Parsedown();
-        $html = $parsedown->text($markdownPath);
+        $html = $parsedown->text($markdownContents);
          # prints: <p>Hello <em>Parsedown</em>!</p>
          return $html;
       } else return false;

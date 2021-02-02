@@ -43,7 +43,7 @@
 
         if ($tokenValue !== false) {
           # replace each token by key-value pairs
-          $contents = self::replaceToken($key, $tokenValue, $contents);
+          $contents = self::replaceToken($token, $tokenValue, $contents);
         } else { continue; }
       }
       # returns seeded contents
