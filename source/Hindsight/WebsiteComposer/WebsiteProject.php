@@ -1,8 +1,9 @@
 <?php
-  namespace Hindsight;
+  namespace Hindsight\WebsiteComposer;
 
   use Hindsight\Json\JsonFile;
   use Hindsight\Settler\SettingsResolver;
+  use Hindsight\FileStorage;
 
   class WebsiteProject
   {

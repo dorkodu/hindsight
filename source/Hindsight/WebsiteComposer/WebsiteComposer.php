@@ -1,11 +1,11 @@
 <?php
-  namespace Hindsight;
+  namespace Hindsight\WebsiteComposer;
 
   use Exception;
   use Parsedown;
-  use Hindsight\Json\JsonFile;
-  use Hindsight\Settler\SettingsResolver;
-  use Hindsight\PageSeeder;
+  use Hindsight\FileStorage;
+  use Hindsight\WebsiteComposer\PageSeeder;
+
 
   class WebsiteComposer
   {
@@ -28,23 +28,52 @@
         # get js data array
         $seedData = $website->getSeedData();
         
-        if ($seedData !== false) {
+        if ($seedData !== false && is_array($seedData)) {
+          
           # keep that seeded html in memory
           $seededTemplate = PageSeeder::seed($templateString, $seedData);
           
           # for each markdown file,
           foreach ($markdownFileList as $markdownFile) {
-            $parsedMarkdown = self::parseMarkdownToHTML($markdownFile);
-            
-            if ($parsedMarkdown !== false) {
-              # markdown -> parse to HTML -> embed to seeded html -> save that html file
-              $contents = PageSeeder::replaceToken(PageSeeder::TOKEN_MARKDOWN, $parsedMarkdown, $seededTemplate);
-            } else throw new Exception("Couldn't parse your Markdown.");
-            
+            self::createHTMLFileFromMarkdown($seededTemplate, $markdownFile, $website->getDirectory());
           }
-          
+
         } else throw new Exception("Couldn't resolve your seed data from hindsight.json.");
-      } else throw new Exception("No Markdown files found, or file list was invalid. Please give it another shot!");
+      }
+    }
+
+    /**
+     * Creates an HTML file for each Markdown file
+     *
+     * @param string $markdownFile
+     * 
+     * @return true on success
+     * @return false on failure
+     */
+    private static function createHTMLFileFromMarkdown(string $template, string $markdownPath, string $rootDirectory)
+    {
+      $markdownPageName = basename($markdownPath, ".md");
+      
+      $parsedMarkdown = self::parseMarkdownToHTML($markdownPath);
+
+      if ($parsedMarkdown !== false) {
+
+        # markdown -> parse to HTML -> embed to seeded html -> save that html file
+        $contents = PageSeeder::replaceToken(PageSeeder::TOKEN_MARKDOWN, $parsedMarkdown, $rootDirectory);
+        $htmlPath = $rootDirectory . "/" . $markdownPageName . ".html";        
+
+        if (!FileStorage::isUsefulFile( $htmlPath )) {
+          $result = FileStorage::createFile($htmlPath);
+
+          if ($result !== false) {
+            if (!FileStorage::putFileContents($htmlPath, $contents))
+              throw new Exception("Couldn't write your contents to : '" . $markdownPageName . ".html'");
+          } else throw new Exception("Couldn't create HTML file : '" . $markdownPageName. ".html'");
+        } else { 
+          if (!FileStorage::putFileContents($htmlPath, $contents))
+            throw new Exception("Couldn't write your contents to : '" . $markdownPageName . ".html'");
+        }
+      } else throw new Exception("Couldn't parse your Markdown.");
     }
 
     /**

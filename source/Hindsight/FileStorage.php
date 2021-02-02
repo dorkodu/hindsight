@@ -48,7 +48,7 @@
     /**
      * Creates a useful file with 0777 permissions
      *
-     * @param $file
+     * @param $filePath
      * @return true on success
      * @return false on failure
      */

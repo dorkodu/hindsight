@@ -1,5 +1,5 @@
 <?php
-  namespace Hindsight;
+  namespace Hindsight\WebsiteComposer;
   
   class PageSeeder
   {
@@ -53,7 +53,7 @@
     /**
      * Replaces a token by its key and its value
      *
-     * @return void
+     * @return string
      */
     public static function replaceToken(string $tokenKey, string $value, string $contents)
     {
