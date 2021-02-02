@@ -1,5 +1,19 @@
 # Hindsight ~ Change Log
 
+### 0.1.2 (February 02, 2021) 
+
+---
+
+- Fixed a few small bugs. 
+  - TerminalUI was not breaking lines in titledParagraph()
+  - Updated the built-in documentation in Hindsight
+
+### 0.1.1 (February 02, 2021) 
+
+---
+
+- Fixed the bug that prevents checking if the state is locked before running 'compose'
+
 ### 0.1.0 (February 02, 2021) 
 
 ---

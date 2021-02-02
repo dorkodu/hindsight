@@ -30,6 +30,8 @@ Create a folder for your website project.<br>
 >
 > Hindsight is a PHP app. It is actually a PHAR binary.<br>So you have to use **PHP CLI** to run Hindsight.
 
+Download the 'hindsight' file in the root repository folder.<br>Copy 'hindsight' binary to your website project folder.
+
 Run Hindsight in that folder from terminal.
 
 ```bash
@@ -86,7 +88,7 @@ So, what to do? Well, simple.<br>
     
     > #### Important !
     >
-    > There is a reserved placeholder, which is **{{ $markdown }}**.<br>This points to where your Markdown contents will be injected into.<br>So **DO NOT FORGET** to put this placeholder in your template !
+    > There is a reserved placeholder, which is **{{ $markdown }}**.<br>You must not use this reserved placeholder in your hindsight.json.<br>This points to where your Markdown contents will be injected into.<br>So **DO NOT FORGET** to put this placeholder in your template !<br>Otherwise Hindsight will assume that you won't use Markdown.
     
     This is a sample **hindsight.json** :
     

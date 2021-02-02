@@ -91,6 +91,7 @@
       CLITinkerer::writeLine("  When you're done, use 'compose' command.");
       CLITinkerer::writeLine("  Hindsight will 'compose' your content and generate a static website in 'composed/' folder.");
       CLITinkerer::writeLine("  That's it! Your site is ready to deploy.");
+      CLITinkerer::breakLine();
       TerminalUI::definition("  Note", "Don't forget to run 'compose' after each time you manipulate the contents.");
       CLITinkerer::breakLine();
 
