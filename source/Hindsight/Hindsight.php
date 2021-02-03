@@ -177,7 +177,6 @@
       # the serialized state of the project
       $state = $this->website->getState();
 
-      echo "\n\n " . $state . "\n\n";
       # lock the state, return the result
       if(StateLocker::lock( $state, $this->website->getDirectory()) === false) {
         self::problem("Couldn't lock the state.");
