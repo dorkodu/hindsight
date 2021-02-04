@@ -1,10 +1,11 @@
 # Hindsight ~ Change Log
 
-### 0.1.3 (February 03, 2021) 
+### 0.1.3 (February 04, 2021) 
 
 ---
 
 - Fixed a small bug causing an unintended print of the current state string in Hindsight.
+- Changed the problem handling mechanism, will only print the message of a problem.
 
 ### 0.1.2 (February 02, 2021) 
 
