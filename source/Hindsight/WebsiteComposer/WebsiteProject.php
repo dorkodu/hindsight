@@ -187,10 +187,8 @@
       
       # RESOLVE hindsight.json 
       if ($this->hindsightJson !== false) {
-
         $jsonContents = $this->hindsightJson->read();
         $state['hindsightJson'] = is_bool($jsonContents) ? "" : $jsonContents;
-      
       } else {
         $state['hindsightJson'] = "";
       }
@@ -200,6 +198,13 @@
         $state['markdownList'] = is_bool($this->markdownList) ? array() : $this->markdownList;
       } else {
         $state['markdownList'] = array();
+      }
+
+      # RESOLVE html template page
+      if ($this->htmlTemplate !== false) {
+        $state['HTML'] = is_bool($this->htmlTemplate) ? "" : $this->htmlTemplate;
+      } else {
+        $state['HTML'] = "";
       }
 
       # serialize what you got, return it

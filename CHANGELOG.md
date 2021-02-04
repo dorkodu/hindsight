@@ -1,6 +1,12 @@
 # Hindsight ~ Change Log
 
-### 0.1.3 (February 04, 2021) 
+### 0.2.0 (February 04, 2021) 
+
+---
+
+- **NEW !** : Hindsight will watch also the changes on your HTML template file :  `page.html` .<br>Starting with v0.2 , state of your project will include your HTML template. When you change it, you will be able to run **'compose'**.
+
+### 0.1.3 (February 03, 2021) 
 
 ---
 
