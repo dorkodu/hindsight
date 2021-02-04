@@ -15,7 +15,7 @@
 
   # a global problem handler for the CLI app
   $problemHandler = function($exception) {
-    Hindsight::problem($exception->__toString());
+    Hindsight::problem($exception->getMessage());
   };
 
   # set problem handlers by default
