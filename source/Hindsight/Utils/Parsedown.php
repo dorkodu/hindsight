@@ -2,6 +2,8 @@
 
 namespace Hindsight\Utils;
 
+use function mb_strlen;
+
 #
 #
 # Parsedown
