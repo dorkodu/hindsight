@@ -105,7 +105,7 @@
      * @return array a validated and filtered list of markdown files
      * @throws Exception on failure
      */
-    private static function validateMarkdownFileList($markdownFileList)
+    public static function validateMarkdownFileList($markdownFileList)
     {
       if ($markdownFileList !== false) {
         if ( is_array($markdownFileList) && (count($markdownFileList) >= 1) ) {

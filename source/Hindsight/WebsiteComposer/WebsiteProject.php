@@ -4,6 +4,7 @@
   use Hindsight\Json\JsonFile;
   use Hindsight\Settler\SettingsResolver;
   use Hindsight\FileStorage;
+  use Hindsight\WebsiteComposer\WebsiteComposer;
 
   class WebsiteProject
   {
@@ -175,6 +176,27 @@
       
       } else return false;
     }
+
+    /**
+     * Gets Markdown files list associated with their contents. Used for tracking also the state of your Markdown pages.
+     *
+     * @param array $markdownFileList
+     * @return array
+     */
+    private function getMarkdownPagesState(array $markdownFileList)
+    {
+      # get valid string list of Markdown file paths
+      $validPathList = WebsiteComposer::validateMarkdownFileList($markdownFileList);
+      # just a simple, empty array
+      $state = array();
+
+      foreach ($validPathList as $validPath) {
+        # match the contents and with file paths
+        $state[$validPath] = FileStorage::getFileContents($validPath);
+      }
+
+      return $state;
+    }
     
     /**
      * Generates a state string by serializing the project properties
@@ -193,9 +215,10 @@
         $state['hindsightJson'] = "";
       }
 
-      # RESOLVE markdown list
+      # RESOLVE markdown contents
       if ($this->markdownList !== false) {
-        $state['markdownList'] = is_bool($this->markdownList) ? array() : $this->markdownList;
+        $markdownFileList = is_bool($this->markdownList) ? array() : $this->markdownList;
+        $state['markdownList'] = $this->getMarkdownPagesState($markdownFileList);
       } else {
         $state['markdownList'] = array();
       }
