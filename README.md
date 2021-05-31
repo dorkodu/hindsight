@@ -58,19 +58,19 @@ Run Hindsight in that folder from terminal.
   		···
   ```
   
-- ### compose
+- ### `compose`
 
   Composes your website and publishes into ***composed/*** folder.<br>You can directly upload what is inside ***composed/*** folder, to your server.<br>If you wish, you can also put some more stuff in. Like images, CSS, JS. Anything.<br>It's freedom !
 
-- ### status
+- ### `status`
 
   Tells you if something is changed and website should be composed again.<br>You can see your website project's current status with this command.
 
-- ### about
+- ### `about`
 
   Gives information about Hindsight.
 
-- ### help
+- ### `help`
 
   Shows a simple documentation on Hindsight.
 
