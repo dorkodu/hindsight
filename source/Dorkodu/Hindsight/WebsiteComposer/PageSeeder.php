@@ -1,6 +1,6 @@
 <?php
 
-namespace Hindsight\WebsiteComposer;
+namespace Dorkodu\Hindsight\WebsiteComposer;
 
 class PageSeeder
 {
