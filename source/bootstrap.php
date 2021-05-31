@@ -1,52 +1,54 @@
 <?php
-  require_once "Hindsight/Utils/Psr4Autoloader.php";
-  require_once "Hindsight/Utils/CLITinkerer.php";
-  
-  use \Hindsight\Utils\Psr4Autoloader;
-  use \Hindsight\Utils\CLITinkerer;
-  use \Hindsight\Hindsight;
 
-  $psr4Autoloader = new Psr4Autoloader();
-  $psr4Autoloader->usePharMethod("hindsight.phar");
-  $psr4Autoloader->register();
-  
-  # registering all namespaces used in Hindsight
-  $psr4Autoloader->addNamespace("Hindsight\\", "Hindsight/");
+require_once "Dorkodu/Utils/Psr4Autoloader.php";
+require_once "Dorkodu/Utils/Console.php";
 
-  # a global problem handler for the CLI app
-  $problemHandler = function($exception) {
-    Hindsight::problem($exception->getMessage());
-  };
+use Dorkodu\Hindsight\Hindsight;
 
-  # set problem handlers by default
-  set_error_handler($problemHandler);
-  set_exception_handler($problemHandler);
+use Dorkodu\Utils\Console;
+use Dorkodu\Utils\Psr4Autoloader;
 
-  $command = CLITinkerer::getArgument(1);
+$psr4Autoloader = new Psr4Autoloader();
+$psr4Autoloader->usePharMethod("hindsight.phar");
+$psr4Autoloader->register();
 
-  # start the app :)
-  $hindsight = new Hindsight(".");
+# registering all namespaces used in Hindsight
+$psr4Autoloader->addNamespace("Dorkodu", "Dorkodu");
 
-  /**
-   * Hindsight's simple router :D
-   */
-  switch ($command) {
-    case 'about':
-      $hindsight->about();
-      break;
-    case 'help':
-      $hindsight->help();
-      break;
-    case 'init':
-      $hindsight->init();
-      break;
-    case 'compose':
-      $hindsight->compose();
-      break;
-    case 'status':
-      $hindsight->status();
-      break;
-    default:
-      $hindsight->greet();
-      break;
-  }
+# a global problem handler for the CLI app
+$problemHandler = function ($exception) {
+  Hindsight::problem($exception->getMessage());
+};
+
+# set problem handlers by default
+set_error_handler($problemHandler);
+set_exception_handler($problemHandler);
+
+$command = Console::getArgument(1);
+
+# start the app :)
+$hindsight = new Hindsight(".");
+
+/**
+ * Hindsight's simple router :D
+ */
+switch ($command) {
+  case 'about':
+    $hindsight->about();
+    break;
+  case 'help':
+    $hindsight->help();
+    break;
+  case 'init':
+    $hindsight->init();
+    break;
+  case 'compose':
+    $hindsight->compose();
+    break;
+  case 'status':
+    $hindsight->status();
+    break;
+  default:
+    $hindsight->greet();
+    break;
+}
